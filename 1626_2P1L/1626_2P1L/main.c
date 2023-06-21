@@ -17,6 +17,7 @@
 #define MAX_COMMAND_LEN 50
 
 unsigned int count = 0;
+int flag = 0;
 char command[MAX_COMMAND_LEN] = {' '};
 uint8_t index1 = 0;
 char c;
@@ -63,6 +64,10 @@ static void CLOCK32K_init(){
 }
 //************* Section Low Power **************
 static void Sleep_Micro(){
+	//_delay_ms(200);
+	//printf("Entra a dormir\r");
+	CPU_CCP = CCP_IOREG_gc;
+	WDT.CTRLA = WDT_PERIOD_OFF_gc;
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	cli();
 	sleep_enable();
@@ -70,6 +75,10 @@ static void Sleep_Micro(){
 	sei();
 	sleep_cpu();
 	sleep_disable();
+	CPU_CCP = CCP_IOREG_gc;
+	WDT.CTRLA = WDT_PERIOD_8KCLK_gc;
+	//printf("Sale de dormir\r");
+	_delay_ms(200);
 }
 
 void PORT_LOWPOWER_Init(void)
@@ -130,7 +139,7 @@ float get_Voltage(int pin){
 		lectura = ((ADC0_read()*2.5)/4096);
 		Voltage = (0.5*lectura) + ((1.0 - 0.5)*Voltage);
 		a++;
-		_delay_ms(100);
+		for(int x =0; x < 380; x++){wdt_reset();}//_delay_ms(100);
 	}
 	ADC0.CTRLA &= ~ADC_ENABLE_bm;
 	return Voltage;
@@ -270,7 +279,11 @@ static void executeCommand(char *command){
 			//PORTB.DIR |= PIN5_bm;
 			//PORTB.PIN5CTRL &= ~PIN5_bm;
 			PORTB.OUT |= PIN5_bm;
-			_delay_ms(5000);//5 segundos
+			unsigned long int iterations = (5000 * F_CPU) / (10000UL);
+			
+			for(unsigned long int i = 0; i < iterations; i++){
+				wdt_reset();
+			}
 			wdt_reset();
 			vol1 = get_Voltage(10); //2 segundos
 			wdt_reset();
@@ -338,7 +351,7 @@ int main(void)
 	
 	sei();
 	
-	
+	for(int a = 0; a<1000; a++);
 	//printf("Ayuda\r");
     /* Replace with your application code */
     while (1) 
@@ -350,12 +363,16 @@ int main(void)
 		RTC.CTRLA = 0;
 		//PORTB.OUT &= ~PIN5_bm;
 		Sleep_Micro();
+		if(flag == 1){
+			executeCommand(command);
+			memset(command, 0, MAX_COMMAND_LEN);
+			flag = 0;
+		}
 		wdt_reset();
     }
 }
 
 ISR(USART0_RXC_vect) {
-	//_delay_ms(50);
 	c = USART0_readChar();
 	//	printf("C: %c\r", c);
 	if(c != '\0' && c != '\r')
@@ -374,15 +391,12 @@ ISR(USART0_RXC_vect) {
 		command[index1] = '\r';
 		index1 = 0;
 		wdt_reset();
-		executeCommand(command);
-		memset(command, 0, MAX_COMMAND_LEN);
+		flag = 1;
 	}
 }
 
 ISR (PORTC_PORT_vect){
 	count++;
-	//executeCommand("MS\r");
-	//memset(command, 0, MAX_COMMAND_LEN);
 	PORTC_INTFLAGS |= PIN3_bm;
 	
 	//count++;
