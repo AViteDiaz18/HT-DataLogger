@@ -17,6 +17,8 @@
 #define MAX_COMMAND_LEN 50
 
 unsigned int count = 0;
+int x = 0;
+int flag = 0;
 char command[MAX_COMMAND_LEN] = {' '};
 uint8_t index1 = 0;
 char c;
@@ -63,6 +65,10 @@ static void CLOCK32K_init(){
 }
 //************* Section Low Power **************
 static void Sleep_Micro(){
+	//_delay_ms(200);
+	//printf("Entra a dormir\r");
+	CPU_CCP = CCP_IOREG_gc;
+	WDT.CTRLA = WDT_PERIOD_OFF_gc;
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	cli();
 	sleep_enable();
@@ -70,6 +76,10 @@ static void Sleep_Micro(){
 	sei();
 	sleep_cpu();
 	sleep_disable();
+	CPU_CCP = CCP_IOREG_gc;
+	WDT.CTRLA = WDT_PERIOD_8KCLK_gc;
+	//printf("Sale de dormir\r");
+	_delay_ms(200);
 }
 
 void PORT_LOWPOWER_Init(void)
@@ -130,7 +140,9 @@ float get_Voltage(int pin){
 		lectura = ((ADC0_read()*2.5)/4096);
 		Voltage = (0.5*lectura) + ((1.0 - 0.5)*Voltage);
 		a++;
-		_delay_ms(100);
+		
+		for(int x =0; x < 380; x++){wdt_reset();}//_delay_ms(100);
+		
 	}
 	ADC0.CTRLA &= ~ADC_ENABLE_bm;
 	return Voltage;
@@ -176,6 +188,8 @@ float get_Presure2(float vol){
 }
 
 static void executeCommand(char *command){
+	//_delay_ms(200);
+	//printf("Entra a ejecutar comando\r");
 	if(strstr(command,"CN")!= NULL){
 		Flotante Z1,Z2,A,B,C,D;
 		char *token = strtok(command, " ");
@@ -213,6 +227,8 @@ static void executeCommand(char *command){
 	}
 	else{
 		if(strcmp(command,"MS\r") == 0){
+			//_delay_ms(200);
+			//printf("Entra a envio\r");
 			float vol1;
 			float vol2;
 			float presion1;
@@ -224,20 +240,40 @@ static void executeCommand(char *command){
 			//PORTB.DIR |= PIN5_bm;
 			//PORTB.PIN5CTRL &= ~PIN5_bm;
 			PORTB.OUT |= PIN5_bm;
-			_delay_ms(5000);//5 segundos
 			wdt_reset();
+			//_delay_ms(5000);//5 segundos
+			//printf("Me Reinicio\r");
+			unsigned long int iterations = (5000 * F_CPU) / (10000UL);
+			
+			for(unsigned long int i = 0; i < iterations; i++){
+				wdt_reset();
+			} 
+			//printf("Me Reinicio2\r");
+			
+			wdt_reset();
+			//_delay_ms(200);
+			//printf("Mide voltage1\r");
 			vol2 = get_Voltage(10); //2 segundos
 			wdt_reset();
 			//printf("Voltaje2: %f\r",vol2);
 			//presion1 = get_Presure1(vol1);
+			//_delay_ms(200);
+			//printf("Mide presion\r");
 			presion2 = get_Presure2(vol2);
-			
+			wdt_reset();
 			PORTB.OUT &= ~PIN5_bm;
+			wdt_reset();
+			//_delay_ms(200);
+			//printf("Mide voltaje2\r");
 			bateria = get_Voltage(6)*5; //2 segundos
 			wdt_reset();
 			
+			//_delay_ms(200);
+			//printf("Imprime\r");
 			printf("RH%.2fRL%dRVO%.2f\r",presion2,count,bateria);
+			wdt_reset();
 			count = 0;
+			wdt_reset();
 		}
 		else{
 			printf("Incorrect Command\r");
@@ -286,21 +322,43 @@ int main(void)
 	
 	//printf("Ayuda\r");
     /* Replace with your application code */
-    while (1) 
-    {
-		ADC0.CTRLA = (0 << ADC_ENABLE_bp);
+	for(int a = 0; a<1000; a++);
+	printf("Me Reinicie\r");
+	 
+	while (1) 
+    {	
+		//printf("IDLE\r");
+		ADC0.CTRLA = (0 << ADC_ENABLE_bp); 
 		//USART0.CTRLB = (0 << USART_TXEN_bp);
 		TCB0.CTRLA = 0;
 		TCA0.SPLIT.CTRLA = 0;
 		RTC.CTRLA = 0;
+		//_delay_ms(200);
+		//printf("Apaga No utilizados\r");
 		//PORTB.OUT &= ~PIN5_bm;
+		//printf("A IDLE\r");
 		Sleep_Micro();
+		//printf("DESPUES DE IDLE\r");
+		if(flag == 1){
+			//_delay_ms(200);
+			//printf("Entra a bandera\r");
+			//CPU_CCP = CCP_IOREG_gc;
+			//WDT.CTRLA = WDT_PERIOD_OFF_gc;
+			executeCommand(command);
+			//_delay_ms(200);
+			//printf("Borra BUFFER\r");
+			//CPU_CCP = CCP_IOREG_gc;
+			//WDT.CTRLA = WDT_PERIOD_8KCLK_gc;
+			memset(command, 0, MAX_COMMAND_LEN);
+			flag = 0;
+		}
 		wdt_reset();
     }
 }
 
 ISR(USART0_RXC_vect) {
 	//_delay_ms(50);
+	//_delay_us(50);
 	c = USART0_readChar();
 	//	printf("C: %c\r", c);
 	if(c != '\0' && c != '\r')
@@ -318,13 +376,14 @@ ISR(USART0_RXC_vect) {
 		//printf("Command %s \r", command);
 		command[index1] = '\r';
 		index1 = 0;
+		//
 		wdt_reset();
-		executeCommand(command);
-		memset(command, 0, MAX_COMMAND_LEN);
+		flag = 1;
 	}
 }
 
 ISR (PORTC_PORT_vect){
+	//_delay_us(50);
 	count++;
 	//executeCommand("MS\r");
 	//memset(command, 0, MAX_COMMAND_LEN);
