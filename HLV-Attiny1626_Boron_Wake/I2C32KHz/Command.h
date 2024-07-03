@@ -4,7 +4,7 @@
  * @brief Libreria para el manejo de comandos de USART
  * @version 1.0
  * @date 05-07-2023
- *
+ * DHT11
  * @copyright Copyright (c) 2023
  *
  */
@@ -235,7 +235,7 @@ void executeCommand(char *command){
 												PORTA.OUT |= PIN3_bm;
 												_delay_ms(1000);
 												wdt_reset();
-												presion1 = get_PressureI2C(get_I2CValue(verbose),2);
+												presion1 = get_PressureI2C(get_I2CValue(verbose,0),2);
 												PORTA.OUT &= ~PIN7_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												_delay_ms(1000);
@@ -246,7 +246,7 @@ void executeCommand(char *command){
 												PORTA.OUT |= PIN3_bm;
 												_delay_ms(1000);
 												wdt_reset();
-												presion1 = get_PressureI2C(get_I2CValue(verbose),1);
+												presion1 = get_PressureI2C(get_I2CValue(verbose,0),1);
 												PORTA.OUT &= ~PIN7_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												_delay_ms(1000);
@@ -281,7 +281,7 @@ void executeCommand(char *command){
 												PORTA.OUT |= PIN3_bm;
 												_delay_ms(1000);
 												wdt_reset();
-												presion2 = get_PressureI2C(get_I2CValue(verbose),2);
+												presion2 = get_PressureI2C(get_I2CValue(verbose,0),2);
 												PORTC.OUT &= ~PIN2_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												break;
@@ -291,7 +291,7 @@ void executeCommand(char *command){
 												PORTA.OUT |= PIN3_bm;
 												_delay_ms(1000);
 												wdt_reset();
-												presion2 = get_PressureI2C(get_I2CValue(verbose),1);
+												presion2 = get_PressureI2C(get_I2CValue(verbose,0),1);
 												PORTC.OUT &= ~PIN2_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												_delay_ms(200);
@@ -338,10 +338,10 @@ void executeCommand(char *command){
 												bateria = 0;
 											}
 											if(s1 == 0 && s2 == 0 && flujo != 0){
-												// CSV
+												//CSV
 												//printf("RH%.2fRL%.2fRQ%.2fRVO%.2f\n",presion1,caudal,presion2,bateria);
 												//MQTT - FTP
-												printf("RH%.2fRQ%.2fRL%.2fRVO%.2f\n",presion2,presion1,caudal,bateria);
+												printf("RH%.2fRQ%.2fRL%.2fRVO%.2f\n",presion1,presion2,caudal,bateria);
 												vol1 = 0;
 												vol2 = 0;
 												caudal = 0;
@@ -426,7 +426,23 @@ void executeCommand(char *command){
 													}
 												}
 												else{
-													printf("Incorrect Command\n");
+													if (strcmp(command,"VR\r") == 0){
+														printf("Right Move\r");
+														PORTB.OUT |= PIN2_bm;
+														_delay_ms(100);
+														PORTB.OUT &= ~PIN2_bm;
+													}
+													else{
+														if (strcmp(command,"VL\r") == 0){
+															printf("Left Move\r");
+															PORTC.OUT |= PIN1_bm;
+															_delay_ms(100);
+															PORTC.OUT &= ~PIN1_bm;
+														}
+														else{
+															printf("Incorrect Command\n");
+														}
+													}
 												}
 											}
 										}

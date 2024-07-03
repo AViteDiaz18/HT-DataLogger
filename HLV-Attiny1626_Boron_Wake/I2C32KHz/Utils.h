@@ -29,6 +29,16 @@ void PinInit(){
 	PORTA.DIR |= PIN1_bm;
 	//VPORTB.DIR = PIN0_bm;
 	
+	//Valvula R
+	PORTB.DIR |= PIN2_bm;
+	PORTB.PIN4CTRL &= ~PORT_PULLUPEN_bm;
+	PORTB.OUT &= ~PIN2_bm;
+	
+	//Valvula L
+	PORTC.DIR |= PIN1_bm;
+	PORTB.PIN4CTRL &= ~PORT_PULLUPEN_bm;
+	PORTC.OUT &= ~PIN1_bm;
+	
 	//Presion 1
 	PORTB.PIN4CTRL &= ~PORT_ISC_gm;
 	PORTB.PIN4CTRL |= PORT_ISC_INPUT_DISABLE_gc;

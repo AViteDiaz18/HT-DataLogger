@@ -66,11 +66,14 @@ uint8_t RX_acked(void)
  * @brief Funcion que obtiene los datos de sensado de presion para los sensores MSP300 y MS32
  *
  */
-int get_I2CValue(int verbose){
+int get_I2CValue(int verbose, int temp){
 	_delay_ms(500);
 	int P_high = 0;
 	int P_low = 0;
-	int Press;
+	int T_high = 0;
+	int T_low = 0;
+	int Press = 0;
+	int Temp = 0;
 	
 	
 	//printf("**************************\r");
@@ -125,16 +128,44 @@ int get_I2CValue(int verbose){
 		else{
 			_delay_ms(50);
 		}
-		
-		TWI0.MCTRLB = (0 << TWI_ACKACT_bp) | TWI_MCMD_STOP_gc;
-		P_low = TWI0.MDATA;
-		
-		if (verbose == 1){
-			printf("Plow: %x, Status %d\n", P_low, TWI0_MSTATUS);
+		//Medicion de temperatura;
+		if(temp == 1){
+			TWI0.MCTRLB = (0 << TWI_ACKACT_bp);
+			P_low = TWI0.MDATA;	
+			if (verbose == 1){
+				printf("Plow: %x, Status %d\n", P_low, TWI0_MSTATUS);
+			}
+			else{
+				_delay_ms(150);
+			}
+			TWI0.MCTRLB = (0 << TWI_ACKACT_bp);
+			T_high = TWI0.MDATA;
+			if (verbose == 1){
+				printf("Thigh: %x, Status %b\n", T_high, TWI0_MSTATUS);
+			}
+			else{
+				_delay_ms(50);
+			}
+			TWI0.MCTRLB = (0 << TWI_ACKACT_bp) | TWI_MCMD_STOP_gc;
+			T_low = TWI0.MDATA;
+			if (verbose == 1){
+				printf("Tlow: %x, Status %b\n", T_low, TWI0_MSTATUS);
+			}
+			else{
+				_delay_ms(50);
+			}
 		}
 		else{
-			_delay_ms(50);
-		}
+			TWI0.MCTRLB = (0 << TWI_ACKACT_bp) | TWI_MCMD_STOP_gc;
+			P_low = TWI0.MDATA;
+			
+			if (verbose == 1){
+				printf("Plow: %x, Status %d\n", P_low, TWI0_MSTATUS);
+			}
+			else{
+				_delay_ms(50);
+			}
+		}	
 	}
 	
 	TWI0.MCTRLA &= ~TWI_ENABLE_bm;
@@ -142,9 +173,11 @@ int get_I2CValue(int verbose){
 	
 	//sensor chico
 	Press = (P_high << 8) | P_low ;
+	Temp = (T_high << 3) | (5 >> T_low) ;
 	
 	if (verbose == 1){
 		printf("Presion en RAW: %d\n", Press);
+		//printf("Temperatura en RAW: %d\n", Temp);
 	}
 	
 	return Press;

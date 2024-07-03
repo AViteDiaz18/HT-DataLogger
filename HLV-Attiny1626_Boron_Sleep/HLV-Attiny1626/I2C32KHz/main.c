@@ -28,6 +28,7 @@ void Sleep_Micro(){
 	
 	sei();
 	sleep_cpu();
+
 	sleep_disable();
 	
 	CPU_CCP = CCP_IOREG_gc;

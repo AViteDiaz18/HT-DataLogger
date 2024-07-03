@@ -175,6 +175,7 @@ void executeCommand(char *command){
 									PORTB.OUT |= PIN5_bm;
 									//Fuente encendida  10 segs
 									if(sensor1 == 'P' || sensor2 == 'P' || sensor1 == 'N' || sensor2 == 'N'){
+										//_delay_ms(1000);
 										wdt_reset();
 										unsigned long int iterations = (5000 * F_CPU) / (10000UL);
 										for(unsigned long int i = 0; i < iterations; i++){

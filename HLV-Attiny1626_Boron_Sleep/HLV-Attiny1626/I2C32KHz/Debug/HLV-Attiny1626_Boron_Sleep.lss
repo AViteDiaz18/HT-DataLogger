@@ -25,11 +25,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  10 .debug_frame  00000494  00000000  00000000  0000b554  2**2
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    00002051  00000000  00000000  0000b9e8  2**0
+ 11 .debug_str    0000204c  00000000  00000000  0000b9e8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00001a26  00000000  00000000  0000da39  2**0
+ 12 .debug_loc    00001a26  00000000  00000000  0000da34  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 00000178  00000000  00000000  0000f45f  2**0
+ 13 .debug_ranges 00000178  00000000  00000000  0000f45a  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -1608,6 +1608,7 @@ ISR (PORTC_PORT_vect){
      b84:	ef 93       	push	r30
      b86:	ff 93       	push	r31
 	
+	
 	if(PC0_INTERRUPT){
      b88:	80 91 49 04 	lds	r24, 0x0449	; 0x800449 <__RODATA_PM_OFFSET__+0x7f8449>
      b8c:	80 ff       	sbrs	r24, 0
@@ -1967,6 +1968,7 @@ void Sleep_Micro(){
      ddc:	78 94       	sei
 	sleep_cpu();
      dde:	88 95       	sleep
+
 	sleep_disable();
      de0:	80 81       	ld	r24, Z
      de2:	8e 7f       	andi	r24, 0xFE	; 254
@@ -2730,6 +2732,7 @@ void executeCommand(char *command){
     12b2:	11 f0       	breq	.+4      	; 0x12b8 <executeCommand+0x4ca>
     12b4:	8e 34       	cpi	r24, 0x4E	; 78
     12b6:	79 f4       	brne	.+30     	; 0x12d6 <executeCommand+0x4e8>
+										//_delay_ms(1000);
 										wdt_reset();
     12b8:	a8 95       	wdr
 										unsigned long int iterations = (5000 * F_CPU) / (10000UL);
@@ -2740,9 +2743,9 @@ void executeCommand(char *command){
     12c0:	04 c0       	rjmp	.+8      	; 0x12ca <executeCommand+0x4dc>
 											wdt_reset();
     12c2:	a8 95       	wdr
-									PORTB.OUT |= PIN5_bm;
 									//Fuente encendida  10 segs
 									if(sensor1 == 'P' || sensor2 == 'P' || sensor1 == 'N' || sensor2 == 'N'){
+										//_delay_ms(1000);
 										wdt_reset();
 										unsigned long int iterations = (5000 * F_CPU) / (10000UL);
 										for(unsigned long int i = 0; i < iterations; i++){
