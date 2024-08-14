@@ -3953,7 +3953,7 @@ int main(void)
     1cb4:	1d 92       	st	X+, r1
     1cb6:	8a 95       	dec	r24
     1cb8:	e9 f7       	brne	.-6      	; 0x1cb4 <main+0x1a8>
-				strncpy(command2,command3,MAX_COMMAND_LEN);
+				strncpy(command2,command3,MAX_COMMAND_LEN);	
     1cba:	42 e3       	ldi	r20, 0x32	; 50
     1cbc:	50 e0       	ldi	r21, 0x00	; 0
     1cbe:	69 e7       	ldi	r22, 0x79	; 121

@@ -217,7 +217,7 @@ void executeCommand(char *command){
 								printf("CN\n");
 								}
 								else{
-									if(command[0] == 'M' && command[1] == 'S'){
+									if(strcmp(command,"MS\r") == 0){
 										sensor1 = read_EEPROM(5348);
 										sensor2 = read_EEPROM(5349);
 										flujo = read_EEPROM(5350);
@@ -246,7 +246,8 @@ void executeCommand(char *command){
 												PORTA.OUT |= PIN3_bm;
 												_delay_ms(1000);
 												wdt_reset();
-												presion1 = get_PressureI2C(get_I2CValue(verbose,0),1);
+												presion1 = 0;
+												//presion1 = get_PressureI2C(get_I2CValue(verbose,0),1);
 												PORTA.OUT &= ~PIN7_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												_delay_ms(1000);
@@ -291,7 +292,8 @@ void executeCommand(char *command){
 												PORTA.OUT |= PIN3_bm;
 												_delay_ms(1000);
 												wdt_reset();
-												presion2 = get_PressureI2C(get_I2CValue(verbose,0),1);
+												presion2 = 0;
+												//presion2 = get_PressureI2C(get_I2CValue(verbose,0),1);
 												PORTC.OUT &= ~PIN2_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												_delay_ms(200);
@@ -328,7 +330,7 @@ void executeCommand(char *command){
 										//count = 0;
 									}
 									else{
-										if(command[0] == 'R' && command[1] == 'T'){
+										if(strcmp(command,"RT\r") == 0){
 											//printf("Bandera1: %d, Bandera2: %d",s1,s2);
 											if(s1 == 0 && s2 == 1 && flujo != 0){
 												printf("RH%.2fRL%.2fRVO%.2f\n",presion1,caudal,bateria);
@@ -345,6 +347,7 @@ void executeCommand(char *command){
 												vol1 = 0;
 												vol2 = 0;
 												caudal = 0;
+												pulsos = 0;
 												presion1 = 0;
 												presion2 = 0;
 												bateria = 0;
@@ -357,7 +360,6 @@ void executeCommand(char *command){
 										}
 										else{
 											if(strcmp(command,"AC\r") == 0){
-												
 												if(flujo == 0){
 													printf("Incorrect Command\n");
 												}
@@ -381,7 +383,7 @@ void executeCommand(char *command){
 												}
 											}
 											else{
-												if(command[0] == 'L' && command[1] == 'T' && command[2]  == ','){
+												if(strstr(command,"LT")!= NULL){
 													int dato = 0;
 													char *token = strtok(command,",");
 													int i = 0;

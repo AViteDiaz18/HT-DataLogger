@@ -1,9 +1,13 @@
-/*
- * I2C32KHz.c
+/**
+ * @file main.c
+ * @author Htech Mexico
+ * @brief Archivo principal del proyecto
+ * @version 1.0
+ * @date 24-05-2023
  *
- * Created: 24/05/2023 11:16:12 a. m.
- * Author : H-Tech
- */ 
+ * @copyright Copyright (c) 2023
+ *
+ */
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -17,27 +21,13 @@
 
 #define hora_acumulado 7200 //600
 
-void Sleep_Micro(){
-	CPU_CCP = CCP_IOREG_gc;
-	WDT.CTRLA = WDT_WINDOW_OFF_gc;
-	
-	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-	cli();
-	sleep_enable();
-	
-	
-	sei();
-	sleep_cpu();
-
-	sleep_disable();
-	
-	CPU_CCP = CCP_IOREG_gc;
-	WDT.CTRLA = WDT_WINDOW_8KCLK_gc;
-}
-
+/**
+ * @brief Funcion principal para el control del microcontrolador
+ *
+ */
 int main(void)
 {
-    //int raw_press = 0;
+	Flotante Pulsos;
 	CLOCK32K_init();
 	PORT_LOWPOWER_Init();
 	PinInit();
@@ -53,10 +43,6 @@ int main(void)
 	PORTC.PIN2CTRL &= ~PORT_PULLUPEN_bm;
 	PORTC.OUT &= ~PIN2_bm;
 	
-	//Wake up pin
-	PORTC.DIR &= ~(1<<0);
-	PORTC.PIN0CTRL &= ~PORT_PULLUPEN_bm;
-	PORTC.PIN0CTRL |= PORT_ISC_BOTHEDGES_gc;
 		
 	CPU_CCP = CCP_IOREG_gc;
 	WDT.CTRLA = WDT_PERIOD_8KCLK_gc;
@@ -65,59 +51,14 @@ int main(void)
 	//TCA0_init();
 	USART0_init();
 	
-	_delay_ms(100);
-	//printf("Ayuda\r");
-	
-	TCB0_init();
-
-	TCB0_stop();
-	//printf("Me Duermo\r");
-	//printf("SM\r");
-	ADC0.CTRLA = (0 << ADC_ENABLE_bp);
-	TCA0.SPLIT.CTRLA = 0;
-	TCB0.CTRLA = 0;
-	RTC.CTRLA = 0;
-	_delay_ms(200);
-	Sleep_Micro();
-	_delay_ms(200);
- 	send = 0;
- 	segundos = 0;
- 	TCB0_start();
-	
-	//printf("Me Despierto\r");
-	
 	sei();
 	
 	//write_EEPROM(5120,0x00);
+	_delay_ms(100);
+	printf("Ayuda\n");
     /* Replace with your application code */
     while (1) 
     {
-		if(send == 0){
-			TCB0_start();
-			executeCommand("MS\r");
-			//bateria = get_Voltage(6)*5;
-			executeCommand("RT\r");
-			memset(command, 0, MAX_COMMAND_LEN);
-			send = 1;
-		}
-		if(seconds >= 30){
-			ADC0.CTRLA = (0 << ADC_ENABLE_bp);
-			TCA0.SPLIT.CTRLA = 0;
-			TCB0.CTRLA = 0;
-			RTC.CTRLA = 0;
-			wdt_reset();
-			if(verbose == 1){
-				printf("Me Duermo\r");
-			}
-			TCB0_stop();
-			//printf("SM\r");
-			_delay_ms(200);
-			Sleep_Micro();
-			_delay_ms(200);
-			send = 0;
-			seconds = 0;
-			TCB0_start();
-		}
 		if(flag == 1){
 			//printf("Comando 1: %s", command1);
 			executeCommand(command1);
@@ -125,7 +66,7 @@ int main(void)
 				memset(command1, 0, MAX_COMMAND_LEN);
 				strncpy(command1,command2,MAX_COMMAND_LEN);
 				memset(command2, 0, MAX_COMMAND_LEN);
-				strncpy(command2,command3,MAX_COMMAND_LEN);	
+				strncpy(command2,command3,MAX_COMMAND_LEN);
 				memset(command3, 0, MAX_COMMAND_LEN);
 				//printf("Comando1: %s, Comando2 %s, Comando3 %s\r",command1,command2,command3);
 			}
@@ -146,9 +87,42 @@ int main(void)
 				}
 			}
 		}
+		if(flujo != 0){
+			if(hr >= hora_acumulado){
+				wdt_reset();
+				int move = read_EEPROM(5351)*4;//*(uint8_t*)(5363)*4;
+				int entrada = read_EEPROM(5350);
+				int multiplicador = 0;
+				switch(entrada){
+					case 1:
+						multiplicador = 10;
+						break;
+					case 2:
+						multiplicador = 100;
+						break;
+					case 3:
+						multiplicador = 1000;
+						break;
+					default:
+						multiplicador = 1;
+					break;
+				}
+				for(int i=0; i<=3; i++){
+					Pulsos.dato[i] = read_EEPROM(i+move+5120);//*(uint8_t *)(i+move+5120);
+				}
+				//printf("Guardado en %d:",move+5120);
+				Pulsos.f += (float)count*multiplicador/1000;
+				for(int i=0; i<=3; i++){
+					write_EEPROM(i+move+5120,Pulsos.dato[i]);
+				}
+				hr = 0;
+				count = 0;
+				wdt_reset();
+			}
+		}
+		
 		ADC0.CTRLA = (0 << ADC_ENABLE_bp);
-		TCA0.SPLIT.CTRLA = 0;
-		//TCB0.CTRLA = 0;
+		TCB0.CTRLA = 0;
 		RTC.CTRLA = 0;
 		wdt_reset();
     }

@@ -36,7 +36,7 @@ void PinInit(){
 	
 	//Valvula L
 	PORTC.DIR |= PIN1_bm;
-	PORTC.PIN1CTRL &= ~PORT_PULLUPEN_bm;
+	PORTB.PIN4CTRL &= ~PORT_PULLUPEN_bm;
 	PORTC.OUT &= ~PIN1_bm;
 	
 	//Presion 1
