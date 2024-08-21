@@ -247,7 +247,7 @@ void executeCommand(char *command){
 												_delay_ms(1000);
 												wdt_reset();
 												presion1 = 0;
-												//presion1 = get_PressureI2C(get_I2CValue(verbose,0),1);
+												presion1 = get_PressureI2C(get_I2CValue(verbose,0),1);
 												PORTA.OUT &= ~PIN7_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												_delay_ms(1000);
@@ -293,7 +293,7 @@ void executeCommand(char *command){
 												_delay_ms(1000);
 												wdt_reset();
 												presion2 = 0;
-												//presion2 = get_PressureI2C(get_I2CValue(verbose,0),1);
+												presion2 = get_PressureI2C(get_I2CValue(verbose,0),1);
 												PORTC.OUT &= ~PIN2_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												_delay_ms(200);
