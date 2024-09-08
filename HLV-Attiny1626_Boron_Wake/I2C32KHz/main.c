@@ -82,6 +82,7 @@ int main(void)
 					//executeCommand(command1);
 					//eraseCommand(command1);
 					memset(command1, 0, MAX_COMMAND_LEN);
+					
 					//printf("ComandoE 1: %s", command1);
 					flag = 0;
 				}

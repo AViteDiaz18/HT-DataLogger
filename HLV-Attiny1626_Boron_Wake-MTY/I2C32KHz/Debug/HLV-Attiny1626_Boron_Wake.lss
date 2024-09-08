@@ -2397,17 +2397,17 @@ void executeCommand(char *command){
     1116:	90 e0       	ldi	r25, 0x00	; 0
     1118:	80 93 46 38 	sts	0x3846, r24	; 0x803846 <flujo>
     111c:	90 93 47 38 	sts	0x3847, r25	; 0x803847 <flujo+0x1>
-										PORTB.OUT |= PIN5_bm;
-    1120:	e0 e2       	ldi	r30, 0x20	; 32
-    1122:	f4 e0       	ldi	r31, 0x04	; 4
-    1124:	84 81       	ldd	r24, Z+4	; 0x04
-    1126:	80 62       	ori	r24, 0x20	; 32
-    1128:	84 83       	std	Z+4, r24	; 0x04
 										if(sensor1 == 'P' || sensor2 == 'P'){
-    112a:	10 35       	cpi	r17, 0x50	; 80
-    112c:	11 f0       	breq	.+4      	; 0x1132 <executeCommand+0x520>
-    112e:	00 35       	cpi	r16, 0x50	; 80
-    1130:	79 f4       	brne	.+30     	; 0x1150 <executeCommand+0x53e>
+    1120:	10 35       	cpi	r17, 0x50	; 80
+    1122:	11 f0       	breq	.+4      	; 0x1128 <executeCommand+0x516>
+    1124:	00 35       	cpi	r16, 0x50	; 80
+    1126:	a1 f4       	brne	.+40     	; 0x1150 <executeCommand+0x53e>
+											PORTB.OUT |= PIN5_bm;
+    1128:	e0 e2       	ldi	r30, 0x20	; 32
+    112a:	f4 e0       	ldi	r31, 0x04	; 4
+    112c:	84 81       	ldd	r24, Z+4	; 0x04
+    112e:	80 62       	ori	r24, 0x20	; 32
+    1130:	84 83       	std	Z+4, r24	; 0x04
 											wdt_reset();
     1132:	a8 95       	wdr
 											unsigned long int iterations = (5000 * F_CPU) / (10000UL);
@@ -2419,8 +2419,8 @@ void executeCommand(char *command){
 												wdt_reset();
     113c:	a8 95       	wdr
 										flujo = read_EEPROM(5350);
-										PORTB.OUT |= PIN5_bm;
 										if(sensor1 == 'P' || sensor2 == 'P'){
+											PORTB.OUT |= PIN5_bm;
 											wdt_reset();
 											unsigned long int iterations = (5000 * F_CPU) / (10000UL);
 											for(unsigned long int i = 0; i < iterations; i++){

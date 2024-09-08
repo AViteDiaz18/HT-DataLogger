@@ -3,33 +3,33 @@ HLV-Attiny1626_Boron_Wake.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000040  00803800  000037ed  000038a1  2**0
+  0 .data         00000040  00803800  000037e5  00003899  2**0
                   CONTENTS, ALLOC, LOAD, DATA
   1 .text         00003640  00000000  00000000  000000b4  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       000001ad  0000b640  00003640  000036f4  2**0
+  2 .rodata       000001a5  0000b640  00003640  000036f4  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .bss          000000ce  00803840  00803840  000038e1  2**0
+  3 .bss          000000ce  00803840  00803840  000038d9  2**0
                   ALLOC
-  4 .comment      0000005c  00000000  00000000  000038e1  2**0
+  4 .comment      0000005c  00000000  00000000  000038d9  2**0
                   CONTENTS, READONLY
-  5 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00003940  2**2
+  5 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00003938  2**2
                   CONTENTS, READONLY
-  6 .debug_aranges 000000f8  00000000  00000000  00003980  2**0
+  6 .debug_aranges 000000f8  00000000  00000000  00003978  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_info   00004dc4  00000000  00000000  00003a78  2**0
+  7 .debug_info   00004d76  00000000  00000000  00003a70  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 00001c59  00000000  00000000  0000883c  2**0
+  8 .debug_abbrev 00001c59  00000000  00000000  000087e6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   000014a8  00000000  00000000  0000a495  2**0
+  9 .debug_line   000014c0  00000000  00000000  0000a43f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_frame  00000464  00000000  00000000  0000b940  2**2
+ 10 .debug_frame  00000464  00000000  00000000  0000b900  2**2
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    00001e5e  00000000  00000000  0000bda4  2**0
+ 11 .debug_str    00001e5e  00000000  00000000  0000bd64  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00001d2b  00000000  00000000  0000dc02  2**0
+ 12 .debug_loc    00001d2b  00000000  00000000  0000dbc2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 00000178  00000000  00000000  0000f92d  2**0
+ 13 .debug_ranges 00000178  00000000  00000000  0000f8ed  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -118,7 +118,7 @@ Disassembly of section .text:
      1d4:	18 e3       	ldi	r17, 0x38	; 56
      1d6:	a0 e0       	ldi	r26, 0x00	; 0
      1d8:	b8 e3       	ldi	r27, 0x38	; 56
-     1da:	ed ee       	ldi	r30, 0xED	; 237
+     1da:	e5 ee       	ldi	r30, 0xE5	; 229
      1dc:	f7 e3       	ldi	r31, 0x37	; 55
      1de:	02 c0       	rjmp	.+4      	; 0x1e4 <__do_copy_data+0x10>
      1e0:	05 90       	lpm	r0, Z+
@@ -2423,12 +2423,13 @@ void executeCommand(char *command){
     116a:	8e c4       	rjmp	.+2332   	; 0x1a88 <executeCommand+0xdf0>
 								}
 								else{
-									if(strcmp(command,"MS\r") == 0){
-    116c:	69 e3       	ldi	r22, 0x39	; 57
-    116e:	77 eb       	ldi	r23, 0xB7	; 183
-    1170:	c8 01       	movw	r24, r16
-    1172:	0e 94 67 19 	call	0x32ce	; 0x32ce <strcmp>
-    1176:	89 2b       	or	r24, r25
+									if(command[0] == 'M' && command[1] == 'S'){
+    116c:	8d e4       	ldi	r24, 0x4D	; 77
+    116e:	f8 12       	cpse	r15, r24
+    1170:	41 c2       	rjmp	.+1154   	; 0x15f4 <executeCommand+0x95c>
+    1172:	f8 01       	movw	r30, r16
+    1174:	81 81       	ldd	r24, Z+1	; 0x01
+    1176:	83 35       	cpi	r24, 0x53	; 83
     1178:	09 f0       	breq	.+2      	; 0x117c <executeCommand+0x4e4>
     117a:	3c c2       	rjmp	.+1144   	; 0x15f4 <executeCommand+0x95c>
 										sensor1 = read_EEPROM(5348);
@@ -2481,8 +2482,8 @@ void executeCommand(char *command){
     11ca:	a1 1d       	adc	r26, r1
     11cc:	b1 1d       	adc	r27, r1
     11ce:	81 15       	cp	r24, r1
-    11d0:	e0 e4       	ldi	r30, 0x40	; 64
-    11d2:	9e 07       	cpc	r25, r30
+    11d0:	f0 e4       	ldi	r31, 0x40	; 64
+    11d2:	9f 07       	cpc	r25, r31
     11d4:	a1 05       	cpc	r26, r1
     11d6:	b1 05       	cpc	r27, r1
     11d8:	b0 f3       	brcs	.-20     	; 0x11c6 <executeCommand+0x52e>
@@ -2639,7 +2640,7 @@ void executeCommand(char *command){
     12f8:	8f 93       	push	r24
     12fa:	3f 93       	push	r19
     12fc:	2f 93       	push	r18
-    12fe:	8d e3       	ldi	r24, 0x3D	; 61
+    12fe:	89 e3       	ldi	r24, 0x39	; 57
     1300:	97 eb       	ldi	r25, 0xB7	; 183
     1302:	9f 93       	push	r25
     1304:	8f 93       	push	r24
@@ -2693,7 +2694,7 @@ void executeCommand(char *command){
     1374:	8f 93       	push	r24
     1376:	3f 93       	push	r19
     1378:	2f 93       	push	r18
-    137a:	8d e3       	ldi	r24, 0x3D	; 61
+    137a:	89 e3       	ldi	r24, 0x39	; 57
     137c:	97 eb       	ldi	r25, 0xB7	; 183
     137e:	9f 93       	push	r25
     1380:	8f 93       	push	r24
@@ -2887,7 +2888,7 @@ void executeCommand(char *command){
     14f6:	8f 93       	push	r24
     14f8:	3f 93       	push	r19
     14fa:	2f 93       	push	r18
-    14fc:	82 e5       	ldi	r24, 0x52	; 82
+    14fc:	8e e4       	ldi	r24, 0x4E	; 78
     14fe:	97 eb       	ldi	r25, 0xB7	; 183
     1500:	9f 93       	push	r25
     1502:	8f 93       	push	r24
@@ -2943,7 +2944,7 @@ void executeCommand(char *command){
     1572:	8f 93       	push	r24
     1574:	3f 93       	push	r19
     1576:	2f 93       	push	r18
-    1578:	82 e5       	ldi	r24, 0x52	; 82
+    1578:	8e e4       	ldi	r24, 0x4E	; 78
     157a:	97 eb       	ldi	r25, 0xB7	; 183
     157c:	9f 93       	push	r25
     157e:	8f 93       	push	r24
@@ -3002,12 +3003,13 @@ void executeCommand(char *command){
 										//count = 0;
 									}
 									else{
-										if(strcmp(command,"RT\r") == 0){
-    15f4:	67 e6       	ldi	r22, 0x67	; 103
-    15f6:	77 eb       	ldi	r23, 0xB7	; 183
-    15f8:	c8 01       	movw	r24, r16
-    15fa:	0e 94 67 19 	call	0x32ce	; 0x32ce <strcmp>
-    15fe:	89 2b       	or	r24, r25
+										if(command[0] == 'R' && command[1] == 'T'){
+    15f4:	92 e5       	ldi	r25, 0x52	; 82
+    15f6:	f9 12       	cpse	r15, r25
+    15f8:	29 c1       	rjmp	.+594    	; 0x184c <executeCommand+0xbb4>
+    15fa:	f8 01       	movw	r30, r16
+    15fc:	81 81       	ldd	r24, Z+1	; 0x01
+    15fe:	84 35       	cpi	r24, 0x54	; 84
     1600:	09 f0       	breq	.+2      	; 0x1604 <executeCommand+0x96c>
     1602:	24 c1       	rjmp	.+584    	; 0x184c <executeCommand+0xbb4>
 											//printf("Bandera1: %d, Bandera2: %d",s1,s2);
@@ -3052,7 +3054,7 @@ void executeCommand(char *command){
     166e:	8f 93       	push	r24
     1670:	80 91 50 38 	lds	r24, 0x3850	; 0x803850 <presion1>
     1674:	8f 93       	push	r24
-    1676:	8b e6       	ldi	r24, 0x6B	; 107
+    1676:	83 e6       	ldi	r24, 0x63	; 99
     1678:	97 eb       	ldi	r25, 0xB7	; 183
     167a:	9f 93       	push	r25
     167c:	8f 93       	push	r24
@@ -3130,7 +3132,7 @@ void executeCommand(char *command){
     1748:	8f 93       	push	r24
     174a:	80 91 50 38 	lds	r24, 0x3850	; 0x803850 <presion1>
     174e:	8f 93       	push	r24
-    1750:	80 e8       	ldi	r24, 0x80	; 128
+    1750:	88 e7       	ldi	r24, 0x78	; 120
     1752:	97 eb       	ldi	r25, 0xB7	; 183
     1754:	9f 93       	push	r25
     1756:	8f 93       	push	r24
@@ -3203,7 +3205,7 @@ void executeCommand(char *command){
     1812:	8f 93       	push	r24
     1814:	80 91 5c 38 	lds	r24, 0x385C	; 0x80385c <caudal>
     1818:	8f 93       	push	r24
-    181a:	8b e9       	ldi	r24, 0x9B	; 155
+    181a:	83 e9       	ldi	r24, 0x93	; 147
     181c:	97 eb       	ldi	r25, 0xB7	; 183
     181e:	9f 93       	push	r25
     1820:	8f 93       	push	r24
@@ -3225,20 +3227,21 @@ void executeCommand(char *command){
 										}
 										else{
 											if(strcmp(command,"AC\r") == 0){
-    184c:	6a ea       	ldi	r22, 0xAA	; 170
+    184c:	62 ea       	ldi	r22, 0xA2	; 162
     184e:	77 eb       	ldi	r23, 0xB7	; 183
     1850:	c8 01       	movw	r24, r16
     1852:	0e 94 67 19 	call	0x32ce	; 0x32ce <strcmp>
     1856:	89 2b       	or	r24, r25
     1858:	09 f0       	breq	.+2      	; 0x185c <executeCommand+0xbc4>
     185a:	65 c0       	rjmp	.+202    	; 0x1926 <executeCommand+0xc8e>
+												
 												if(flujo == 0){
     185c:	80 91 46 38 	lds	r24, 0x3846	; 0x803846 <flujo>
     1860:	90 91 47 38 	lds	r25, 0x3847	; 0x803847 <flujo+0x1>
     1864:	89 2b       	or	r24, r25
     1866:	29 f4       	brne	.+10     	; 0x1872 <executeCommand+0xbda>
 													printf("Incorrect Command\n");
-    1868:	8e ea       	ldi	r24, 0xAE	; 174
+    1868:	86 ea       	ldi	r24, 0xA6	; 166
     186a:	97 eb       	ldi	r25, 0xB7	; 183
     186c:	0e 94 5b 1a 	call	0x34b6	; 0x34b6 <puts>
     1870:	0b c1       	rjmp	.+534    	; 0x1a88 <executeCommand+0xdf0>
@@ -3249,8 +3252,8 @@ void executeCommand(char *command){
     1872:	87 ee       	ldi	r24, 0xE7	; 231
     1874:	94 e1       	ldi	r25, 0x14	; 20
     1876:	0e 94 6c 02 	call	0x4d8	; 0x4d8 <read_EEPROM>
-    187a:	f4 e0       	ldi	r31, 0x04	; 4
-    187c:	8f 9f       	mul	r24, r31
+    187a:	94 e0       	ldi	r25, 0x04	; 4
+    187c:	89 9f       	mul	r24, r25
     187e:	70 01       	movw	r14, r0
     1880:	11 24       	eor	r1, r1
 													for(int k=0; k <= 3; k++){
@@ -3292,7 +3295,7 @@ void executeCommand(char *command){
     18b6:	2f 93       	push	r18
     18b8:	9f 93       	push	r25
     18ba:	8f 93       	push	r24
-    18bc:	80 ec       	ldi	r24, 0xC0	; 192
+    18bc:	88 eb       	ldi	r24, 0xB8	; 184
     18be:	97 eb       	ldi	r25, 0xB7	; 183
     18c0:	9f 93       	push	r25
     18c2:	8f 93       	push	r24
@@ -3360,8 +3363,8 @@ void executeCommand(char *command){
 											}
 											else{
 												if(command[0] == 'L' && command[1] == 'T' && command[2]  == ','){
-    1926:	2c e4       	ldi	r18, 0x4C	; 76
-    1928:	f2 12       	cpse	r15, r18
+    1926:	ec e4       	ldi	r30, 0x4C	; 76
+    1928:	fe 12       	cpse	r15, r30
     192a:	77 c0       	rjmp	.+238    	; 0x1a1a <executeCommand+0xd82>
     192c:	f8 01       	movw	r30, r16
     192e:	81 81       	ldd	r24, Z+1	; 0x01
@@ -3529,14 +3532,14 @@ void executeCommand(char *command){
 												}
 												else{
 													if (strcmp(command,"VR\r") == 0){
-    1a1a:	68 ec       	ldi	r22, 0xC8	; 200
+    1a1a:	60 ec       	ldi	r22, 0xC0	; 192
     1a1c:	77 eb       	ldi	r23, 0xB7	; 183
     1a1e:	c8 01       	movw	r24, r16
     1a20:	0e 94 67 19 	call	0x32ce	; 0x32ce <strcmp>
     1a24:	89 2b       	or	r24, r25
     1a26:	a9 f4       	brne	.+42     	; 0x1a52 <executeCommand+0xdba>
 														printf("Right Move\r");
-    1a28:	8c ec       	ldi	r24, 0xCC	; 204
+    1a28:	84 ec       	ldi	r24, 0xC4	; 196
     1a2a:	97 eb       	ldi	r25, 0xB7	; 183
     1a2c:	9f 93       	push	r25
     1a2e:	8f 93       	push	r24
@@ -3562,14 +3565,14 @@ void executeCommand(char *command){
 													}
 													else{
 														if (strcmp(command,"VL\r") == 0){
-    1a52:	68 ed       	ldi	r22, 0xD8	; 216
+    1a52:	60 ed       	ldi	r22, 0xD0	; 208
     1a54:	77 eb       	ldi	r23, 0xB7	; 183
     1a56:	c8 01       	movw	r24, r16
     1a58:	0e 94 67 19 	call	0x32ce	; 0x32ce <strcmp>
     1a5c:	89 2b       	or	r24, r25
     1a5e:	a1 f4       	brne	.+40     	; 0x1a88 <executeCommand+0xdf0>
 															printf("Left Move\r");
-    1a60:	8c ed       	ldi	r24, 0xDC	; 220
+    1a60:	84 ed       	ldi	r24, 0xD4	; 212
     1a62:	97 eb       	ldi	r25, 0xB7	; 183
     1a64:	9f 93       	push	r25
     1a66:	8f 93       	push	r24
@@ -3693,7 +3696,7 @@ int main(void)
 	//write_EEPROM(5120,0x00);
 	_delay_ms(100);
 	printf("Ayuda\n");
-    1b0a:	87 ee       	ldi	r24, 0xE7	; 231
+    1b0a:	8f ed       	ldi	r24, 0xDF	; 223
     1b0c:	97 eb       	ldi	r25, 0xB7	; 183
     1b0e:	0e 94 5b 1a 	call	0x34b6	; 0x34b6 <puts>
     /* Replace with your application code */
@@ -3803,6 +3806,7 @@ int main(void)
     1bc0:	1d 92       	st	X+, r1
     1bc2:	8a 95       	dec	r24
     1bc4:	e9 f7       	brne	.-6      	; 0x1bc0 <main+0x124>
+					
 					//printf("ComandoE 1: %s", command1);
 					flag = 0;
     1bc6:	10 92 6c 38 	sts	0x386C, r1	; 0x80386c <flag>

@@ -807,15 +807,15 @@ END GROUP
  *(.fini0)
                 0x00003640                _etext = .
 
-.rodata         0x0000b640      0x1ad load address 0x00003640
+.rodata         0x0000b640      0x1a5 load address 0x00003640
  *(.rodata)
  *(.rodata*)
  .rodata.str1.1
-                0x0000b640      0x1ad main.o
-                                0x1bb (size before relaxing)
+                0x0000b640      0x1a5 main.o
+                                0x1b3 (size before relaxing)
  *(.gnu.linkonce.r*)
 
-.data           0x00803800       0x40 load address 0x000037ed
+.data           0x00803800       0x40 load address 0x000037e5
                 0x00803800                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -880,8 +880,8 @@ END GROUP
  COMMON         0x00803908        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(iob.o)
                 0x00803908                __iob
                 0x0080390e                PROVIDE (__bss_end, .)
-                0x000037ed                __data_load_start = LOADADDR (.data)
-                0x0000382d                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x000037e5                __data_load_start = LOADADDR (.data)
+                0x00003825                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x0080390e        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
@@ -971,20 +971,20 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x4dc4
+.debug_info     0x00000000     0x4d76
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000     0x18eb C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.10.348/gcc/dev/attiny1626/avrxmega3/crtattiny1626.o
- .debug_info    0x000018eb     0x34d9 main.o
+ .debug_info    0x000018eb     0x348b main.o
 
 .debug_abbrev   0x00000000     0x1c59
  *(.debug_abbrev)
  .debug_abbrev  0x00000000     0x1798 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.10.348/gcc/dev/attiny1626/avrxmega3/crtattiny1626.o
  .debug_abbrev  0x00001798      0x4c1 main.o
 
-.debug_line     0x00000000     0x14a8
+.debug_line     0x00000000     0x14c0
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x14b C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.10.348/gcc/dev/attiny1626/avrxmega3/crtattiny1626.o
- .debug_line    0x0000014b     0x135d main.o
+ .debug_line    0x0000014b     0x1375 main.o
 
 .debug_frame    0x00000000      0x464
  *(.debug_frame)

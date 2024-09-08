@@ -221,8 +221,8 @@ void executeCommand(char *command){
 										sensor1 = read_EEPROM(5348);
 										sensor2 = read_EEPROM(5349);
 										flujo = read_EEPROM(5350);
-										PORTB.OUT |= PIN5_bm;
 										if(sensor1 == 'P' || sensor2 == 'P'){
+											PORTB.OUT |= PIN5_bm;
 											wdt_reset();
 											unsigned long int iterations = (5000 * F_CPU) / (10000UL);
 											for(unsigned long int i = 0; i < iterations; i++){
