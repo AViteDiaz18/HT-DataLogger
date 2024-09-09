@@ -53,6 +53,9 @@ ISR (PORTC_PORT_vect){
 		case 3:
 		mul = 1000;
 		break;
+		case 4:
+		mul = 5000;
+		break;
 		default:
 		mul = 1;
 		break;
