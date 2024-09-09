@@ -103,6 +103,9 @@ int main(void)
 					case 3:
 						multiplicador = 1000;
 						break;
+					case 4:
+						multiplicador = 5000;
+						break;
 					default:
 						multiplicador = 1;
 					break;

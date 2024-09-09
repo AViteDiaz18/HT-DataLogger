@@ -105,7 +105,7 @@ void executeCommand(char *command){
 					litros = 1000;
 				break;
 				case 4:
-					litros = 10000;
+					litros = 5000;
 				break;
 				default:
 					litros = 1;	
@@ -415,7 +415,7 @@ void executeCommand(char *command){
 																printf("LT\n");
 															}
 															else{
-																if(dato == 10000){
+																if(dato == 5000){
 																	write_EEPROM(5350,4);
 																	printf("LT\n");
 																}
