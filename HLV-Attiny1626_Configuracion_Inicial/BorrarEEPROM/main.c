@@ -82,7 +82,7 @@ void erase_EEPROM(){
 *
 *		3 = 1000LPS
 *
-*		4 = 10000LPS
+*		4 = 5000LPS
 *	
 */
 void config_Sensors(char *S1, char *S2, char *S3){
@@ -148,7 +148,7 @@ int main()
 {
 	CLOCK32K_init();
 	erase_EEPROM();
-	config_Sensors('i','A',0);
+	config_Sensors('i','i',4);
 	//calibrate_sensor(9.207740,4.861686,1);
 	//calibrate_sensor(9.096944,4.595756,2);
 	
