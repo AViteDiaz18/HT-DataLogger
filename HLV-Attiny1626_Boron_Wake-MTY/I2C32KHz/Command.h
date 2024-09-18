@@ -235,7 +235,7 @@ void executeCommand(char *command){
 												PORTA.OUT |= PIN3_bm;
 												_delay_ms(1000);
 												wdt_reset();
-												presion1 = get_PressureI2C(get_I2CValue(verbose,0),2);
+												//presion1 = get_PressureI2C(get_I2CValue(verbose,0),2);
 												PORTA.OUT &= ~PIN7_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												_delay_ms(1000);
@@ -246,8 +246,8 @@ void executeCommand(char *command){
 												PORTA.OUT |= PIN3_bm;
 												_delay_ms(1000);
 												wdt_reset();
-												presion1 = 0;
-												presion1 = get_PressureI2C(get_I2CValue(verbose,0),1);
+												presion1 = 8.65;
+												//presion1 = get_PressureI2C(get_I2CValue(verbose,0),1);
 												PORTA.OUT &= ~PIN7_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												_delay_ms(1000);
@@ -282,7 +282,7 @@ void executeCommand(char *command){
 												PORTA.OUT |= PIN3_bm;
 												_delay_ms(1000);
 												wdt_reset();
-												presion2 = get_PressureI2C(get_I2CValue(verbose,0),2);
+												//presion2 = get_PressureI2C(get_I2CValue(verbose,0),2);
 												PORTC.OUT &= ~PIN2_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												break;
@@ -292,8 +292,8 @@ void executeCommand(char *command){
 												PORTA.OUT |= PIN3_bm;
 												_delay_ms(1000);
 												wdt_reset();
-												presion2 = 0;
-												presion2 = get_PressureI2C(get_I2CValue(verbose,0),1);
+												presion2 = 7.86;
+												//presion2 = get_PressureI2C(get_I2CValue(verbose,0),1);
 												PORTC.OUT &= ~PIN2_bm;
 												PORTA.OUT &= ~PIN3_bm;
 												_delay_ms(200);
@@ -341,7 +341,7 @@ void executeCommand(char *command){
 											}
 											if(s1 == 0 && s2 == 0 && flujo != 0){
 												//CSV
-												printf("RH%.2fRL%.2fRQ%.2fRVO%.2f\n",presion1,caudal,presion2,bateria);
+												printf("RH%.2fRL%.2fRQ%.2fRVO%.2fRSTN%d\n",presion1,caudal,presion2,bateria,read_EEPROM(5347));
 												//MQTT - FTP
 												//printf("RH%.2fRQ%.2fRL%.2fRVO%.2f\n",presion1,presion2,caudal,bateria);
 												vol1 = 0;
@@ -443,7 +443,15 @@ void executeCommand(char *command){
 															PORTC.OUT &= ~PIN1_bm;
 														}
 														else{
-															//printf("Incorrect Command\n");
+															if(strcmp(command,"WDR\r")== 0){
+																wdt_reset();
+																printf("WDR,1\r");
+																_delay_ms(1000000);
+																wdt_reset();
+															}
+															else{
+																//printf("Incorrect Command\n");	
+															}
 														}
 													}
 												}
@@ -459,7 +467,5 @@ void executeCommand(char *command){
 		}
 	}
 }
-
-
 
 #endif /* COMMAND_H_ */

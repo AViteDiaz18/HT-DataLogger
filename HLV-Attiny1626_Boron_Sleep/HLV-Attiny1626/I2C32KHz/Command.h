@@ -172,9 +172,9 @@ void executeCommand(char *command){
 								if(strcmp(command,"MS\r") == 0){
 									sensor1 = read_EEPROM(5348);
 									sensor2 = read_EEPROM(5349);
-									PORTB.OUT |= PIN5_bm;
 									//Fuente encendida  10 segs
 									if(sensor1 == 'P' || sensor2 == 'P' || sensor1 == 'N' || sensor2 == 'N'){
+										PORTB.OUT |= PIN5_bm;
 										//_delay_ms(1000);
 										wdt_reset();
 										unsigned long int iterations = (5000 * F_CPU) / (10000UL);

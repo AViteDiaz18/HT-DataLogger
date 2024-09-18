@@ -12,9 +12,9 @@
     <OutputFileName>$(MSBuildProjectName)</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>I2C32KHz</AssemblyName>
-    <Name>HLV-Attiny1626_Boron_Wake</Name>
-    <RootNamespace>I2C32KHz</RootNamespace>
+    <AssemblyName>BorrarEEPROM</AssemblyName>
+    <Name>HLV_Attiny1626_Configuracion_Inicial</Name>
+    <RootNamespace>BorrarEEPROM</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
@@ -133,13 +133,11 @@
         <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
         <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
         <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-        <avrgcc.linker.general.UseVprintfLibrary>True</avrgcc.linker.general.UseVprintfLibrary>
         <avrgcc.linker.libraries.Libraries>
           <ListValues>
             <Value>libm</Value>
           </ListValues>
         </avrgcc.linker.libraries.Libraries>
-        <avrgcc.linker.miscellaneous.LinkerFlags>-Wl,-u,vfscanf -lscanf_flt -lm -Wl,-u,vfprintf,-lprintf_flt,-lm</avrgcc.linker.miscellaneous.LinkerFlags>
         <avrgcc.assembler.general.IncludePaths>
           <ListValues>
             <Value>%24(PackRepoDir)\atmel\ATtiny_DFP\1.10.348\include\</Value>
@@ -150,34 +148,7 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ADC.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Command.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="EEPROM.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="I2C.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="main.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Pressure.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="PULSE.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="TCA.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="USART.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Utils.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

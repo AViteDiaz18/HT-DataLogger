@@ -2716,22 +2716,22 @@ void executeCommand(char *command){
     1294:	94 e1       	ldi	r25, 0x14	; 20
     1296:	0e 94 4b 02 	call	0x496	; 0x496 <read_EEPROM>
     129a:	80 93 11 39 	sts	0x3911, r24	; 0x803911 <sensor2>
-									PORTB.OUT |= PIN5_bm;
-    129e:	e0 e2       	ldi	r30, 0x20	; 32
-    12a0:	f4 e0       	ldi	r31, 0x04	; 4
-    12a2:	94 81       	ldd	r25, Z+4	; 0x04
-    12a4:	90 62       	ori	r25, 0x20	; 32
-    12a6:	94 83       	std	Z+4, r25	; 0x04
 									//Fuente encendida  10 segs
 									if(sensor1 == 'P' || sensor2 == 'P' || sensor1 == 'N' || sensor2 == 'N'){
-    12a8:	10 35       	cpi	r17, 0x50	; 80
-    12aa:	31 f0       	breq	.+12     	; 0x12b8 <executeCommand+0x4ca>
-    12ac:	80 35       	cpi	r24, 0x50	; 80
-    12ae:	21 f0       	breq	.+8      	; 0x12b8 <executeCommand+0x4ca>
-    12b0:	1e 34       	cpi	r17, 0x4E	; 78
-    12b2:	11 f0       	breq	.+4      	; 0x12b8 <executeCommand+0x4ca>
-    12b4:	8e 34       	cpi	r24, 0x4E	; 78
-    12b6:	79 f4       	brne	.+30     	; 0x12d6 <executeCommand+0x4e8>
+    129e:	10 35       	cpi	r17, 0x50	; 80
+    12a0:	31 f0       	breq	.+12     	; 0x12ae <executeCommand+0x4c0>
+    12a2:	80 35       	cpi	r24, 0x50	; 80
+    12a4:	21 f0       	breq	.+8      	; 0x12ae <executeCommand+0x4c0>
+    12a6:	1e 34       	cpi	r17, 0x4E	; 78
+    12a8:	11 f0       	breq	.+4      	; 0x12ae <executeCommand+0x4c0>
+    12aa:	8e 34       	cpi	r24, 0x4E	; 78
+    12ac:	a1 f4       	brne	.+40     	; 0x12d6 <executeCommand+0x4e8>
+										PORTB.OUT |= PIN5_bm;
+    12ae:	e0 e2       	ldi	r30, 0x20	; 32
+    12b0:	f4 e0       	ldi	r31, 0x04	; 4
+    12b2:	84 81       	ldd	r24, Z+4	; 0x04
+    12b4:	80 62       	ori	r24, 0x20	; 32
+    12b6:	84 83       	std	Z+4, r24	; 0x04
 										//_delay_ms(1000);
 										wdt_reset();
     12b8:	a8 95       	wdr
@@ -2743,8 +2743,8 @@ void executeCommand(char *command){
     12c0:	04 c0       	rjmp	.+8      	; 0x12ca <executeCommand+0x4dc>
 											wdt_reset();
     12c2:	a8 95       	wdr
-									//Fuente encendida  10 segs
 									if(sensor1 == 'P' || sensor2 == 'P' || sensor1 == 'N' || sensor2 == 'N'){
+										PORTB.OUT |= PIN5_bm;
 										//_delay_ms(1000);
 										wdt_reset();
 										unsigned long int iterations = (5000 * F_CPU) / (10000UL);
