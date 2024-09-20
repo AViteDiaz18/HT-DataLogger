@@ -85,7 +85,7 @@ void erase_EEPROM(){
 *		4 = 10000LPS
 *	
 */
-void config_Sensors(char *S1, char *S2, float *flujo){
+void config_Sensors(char *S1, char *S2, float flujo){
 	Flotante flow;
 	flow.f = flujo;
 	*(uint8_t *)(5348) = S1;
@@ -157,7 +157,7 @@ int main()
 {
 	CLOCK32K_init();
 	erase_EEPROM();
-	config_Sensors('i','i',2.5);
+	config_Sensors('i','i',5000);
 	//calibrate_sensor(9.172461,4.777018,1);
 	//calibrate_sensor(9.073957,4.540608,2);
 	
