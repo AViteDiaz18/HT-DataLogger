@@ -341,7 +341,7 @@ void executeCommand(char *command){
 											}
 											if(s1 == 0 && s2 == 0 && flujo != 0){
 												//CSV
-												printf("RH%.2fRL%.2fRQ%.2fRVO%.2fRSTN%d\n",presion1,caudal,presion2,bateria,read_EEPROM(5347));
+												printf("RH%.2fRL%.2fRQ%.2fRVO%.2f\n",presion1,caudal,presion2,bateria);
 												//MQTT - FTP
 												//printf("RH%.2fRQ%.2fRL%.2fRVO%.2f\n",presion1,presion2,caudal,bateria);
 												vol1 = 0;
