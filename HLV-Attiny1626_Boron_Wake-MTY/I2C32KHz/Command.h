@@ -92,25 +92,25 @@ void executeCommand(char *command){
 			flow.dato[1] = read_EEPROM(5357);
 			flow.dato[2] = read_EEPROM(5358);
 			flow.dato[3] = read_EEPROM(5359);
-			printf("LT:%f\n",flow);
+			printf("GLT%.2f\n",flow.f);
 		}
 		else{
-			if(strstr(command,"GCN1")!= NULL){
+			if(strstr(command,"GC1")!= NULL){
 				Flotante A1,B1;
 				for (int i = 0; i <= 3; i++){
 					A1.dato[i] = read_EEPROM(5360+i);
 					B1.dato[i] = read_EEPROM(5364+i);
 				}
-				printf("CN1:(%.6fx-%.6f)*10.2\n",A1.f,B1.f);
+				printf("GC1%.2f_%.2f\n",A1.f,B1.f);
 			}
 			else{
-				if (strstr(command,"GCN2")!= NULL){
+				if (strstr(command,"GC2")!= NULL){
 					Flotante A2,B2;
 					for (int i = 0; i <= 3; i++){
 						A2.dato[i] = read_EEPROM(5368+i);
 						B2.dato[i] = read_EEPROM(5372+i);
 					}
-					printf("CN2:(%.6fx-%.6f)*10.2\n",A2.f,B2.f);	
+					printf("GC2%.2f_%.2f\n",A2.f,B2.f);	
 				}
 				else{
 					if(command[0] == 'W' && command[1] == 'S'){
@@ -308,7 +308,7 @@ void executeCommand(char *command){
 									else{
 										if(strcmp(command,"RT\r") == 0){
 											//printf("Bandera1: %d, Bandera2: %d",s1,s2);
-											if(s1 == 0 && s2 == 1){
+											if(s1 == 0 && s2 == 1 && read_EEPROM(5352) == 0){
 												printf("RH%.2fRL%.2fRVO%.2f\n",presion1,caudal,bateria);
 												vol1 = 0;
 												caudal = 0;
@@ -317,7 +317,12 @@ void executeCommand(char *command){
 											}
 											if(s1 == 0 && s2 == 0){
 												//CSV
-												printf("RH%.2fRL%.2fRQ%.2fRVO%.2f\n",presion1,caudal,presion2,bateria);
+												if(read_EEPROM(5352) == 0){
+													printf("RH%.2fRL%.2fRQ%.2fRVO%.2f\n",presion1,caudal,presion2,bateria);
+												}
+												else{
+													printf("RH%.2fRL%.2fRQ%.2fRVO%.2f\n",presion2,caudal,presion1,bateria);
+												}
 												//MQTT - FTP
 												//printf("RH%.2fRQ%.2fRL%.2fRVO%.2f\n",presion1,presion2,caudal,bateria);
 												vol1 = 0;
@@ -400,7 +405,9 @@ void executeCommand(char *command){
 															PORTC.OUT &= ~PIN1_bm;
 														}
 														else{
-															if(strcmp(command,"AC\r") == 0){
+															//Switch de activacion de acumulado
+															//0 desactivado - 1 activado
+															if(command[0] == 'S' && command[1] == 'A' && command[2] == 'C'){
 																int actual = read_EEPROM(5354);
 																if(actual == 1){
 																	write_EEPROM(5354,0x00);
@@ -410,7 +417,9 @@ void executeCommand(char *command){
 																}
 															}
 															else{
-																if(strcmp(command,"SW\r") == 0){
+																//Switch de cambio de sensores
+																//0 original - 1 invertido
+																if(strcmp(command,"SSW\r") == 0){
 																	int actual = read_EEPROM(5352);
 																	if(actual == 1){
 																		write_EEPROM(5352,0x00);
@@ -420,26 +429,42 @@ void executeCommand(char *command){
 																	}
 																}
 																else{
-																	if(strstr(command,"FT")!= NULL){
-																		int dato = 0;
-																		char *token = strtok(command,",");
-																		int i = 0;
-																		if(token != NULL){
-																			while(token != NULL){
-																				switch(i){
-																					case 0:
-																					break;
-																					case 1:
-																					sscanf(token,"%d",&dato);
-																					break;
+																	//Switch de tipo de flujo
+																	//0 caudal - 1 volumen
+																	if(strstr(command,"SFT")!= NULL){
+																		int actual = read_EEPROM(5352);
+																		if(actual == 1){
+																			write_EEPROM(5355,0x00);
+																		}
+																		else{
+																			write_EEPROM(5355,0x01);
+																		}
+																	}
+																	else{
+																		if(command[0] == 'G' && command[1] == 'A' && command[2] == 'C'){
+																			printf("GAC%d",read_EEPROM(5354));
+																		}
+																		else{
+																			if(command[0] == 'G' && command[1] == 'S' && command[2] == 'W'){
+																				printf("GSW%d",read_EEPROM(5352));
+																			}
+																			else{
+																				if(command[0] == 'G' && command[1] == 'S' && command[2] == '1'){
+																					printf("GS1%c",read_EEPROM(5348));
 																				}
-																				token = strtok(NULL, ",");
-																				i++;
+																				else{
+																					if(command[0] == 'G' && command[1] == 'S' && command[2] == '2'){
+																						printf("GS2%c",read_EEPROM(5349));
+																					}
+																					else{
+																						if(command[0] == 'G' && command[1] == 'F' && command[2] == 'T'){
+																							printf("GFT%d",read_EEPROM(5355));
+																						}
+																					}
+																				}
 																			}
 																		}
-																		write_EEPROM(dato,5355);
 																	}
-																	
 																}
 															}
 														}
