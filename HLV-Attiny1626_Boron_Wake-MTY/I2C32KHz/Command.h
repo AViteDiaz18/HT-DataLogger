@@ -400,7 +400,7 @@ void executeCommand(char *command){
 															PORTC.OUT &= ~PIN1_bm;
 														}
 														else{
-															if(strcmp(command,"AV\r") == 0){
+															if(strcmp(command,"AC\r") == 0){
 																int actual = read_EEPROM(5354);
 																if(actual == 1){
 																	write_EEPROM(5354,0x00);
@@ -410,7 +410,7 @@ void executeCommand(char *command){
 																}
 															}
 															else{
-																if(strcmp(command,"CC\r") == 0){
+																if(strcmp(command,"SW\r") == 0){
 																	int actual = read_EEPROM(5352);
 																	if(actual == 1){
 																		write_EEPROM(5352,0x00);
@@ -439,6 +439,7 @@ void executeCommand(char *command){
 																		}
 																		write_EEPROM(dato,5355);
 																	}
+																	
 																}
 															}
 														}
