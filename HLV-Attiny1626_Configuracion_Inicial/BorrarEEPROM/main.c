@@ -97,6 +97,12 @@ void config_Sensors(char *S1, char *S2, char *S3){
 	NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
 }
 
+void set_reinicios(){
+	*(uint8_t *)(5347) = 0;
+	CPU_CCP = CCP_SPM_gc;
+	NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
+}
+
 /**
 * @brief Configura las posibles rectas de calibracion para los sensores 4.20ma
 *
@@ -151,7 +157,8 @@ int main()
 {
 	CLOCK32K_init();
 	erase_EEPROM();
-	config_Sensors('i','i',2);
+	config_Sensors('i','i',100);
+	set_reinicios();
 	//calibrate_sensor(9.172461,4.777018,1);
 	//calibrate_sensor(9.073957,4.540608,2);
 	

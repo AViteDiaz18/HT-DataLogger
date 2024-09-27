@@ -3,29 +3,29 @@ HLV_Attiny1626_Configuracion_Inicial.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00803800  00803800  00000152  2**0
+  0 .data         00000000  00803800  00803800  00000166  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000000fe  00000000  00000000  00000054  2**1
+  1 .text         00000112  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000152  2**0
+  2 .comment      00000030  00000000  00000000  00000166  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000184  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000198  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000040  00000000  00000000  000001c4  2**0
+  4 .debug_aranges 00000048  00000000  00000000  000001d8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00001d20  00000000  00000000  00000204  2**0
+  5 .debug_info   00001d43  00000000  00000000  00000220  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00001999  00000000  00000000  00001f24  2**0
+  6 .debug_abbrev 000019b1  00000000  00000000  00001f63  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000423  00000000  00000000  000038bd  2**0
+  7 .debug_line   0000044c  00000000  00000000  00003914  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000080  00000000  00000000  00003ce0  2**2
+  8 .debug_frame  00000090  00000000  00000000  00003d60  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000eb9  00000000  00000000  00003d60  2**0
+  9 .debug_str    00000ec7  00000000  00000000  00003df0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000019c  00000000  00000000  00004c19  2**0
+ 10 .debug_loc    0000019c  00000000  00000000  00004cb7  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000060  00000000  00000000  00004db5  2**0
+ 11 .debug_ranges 00000068  00000000  00000000  00004e53  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -69,8 +69,8 @@ Disassembly of section .text:
   7e:	cd bf       	out	0x3d, r28	; 61
   80:	df e3       	ldi	r29, 0x3F	; 63
   82:	de bf       	out	0x3e, r29	; 62
-  84:	0e 94 70 00 	call	0xe0	; 0xe0 <main>
-  88:	0c 94 7d 00 	jmp	0xfa	; 0xfa <_exit>
+  84:	0e 94 78 00 	call	0xf0	; 0xf0 <main>
+  88:	0c 94 87 00 	jmp	0x10e	; 0x10e <_exit>
 
 0000008c <__bad_interrupt>:
   8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -121,28 +121,38 @@ Disassembly of section .text:
   dc:	80 83       	st	Z, r24
   de:	08 95       	ret
 
-000000e0 <main>:
+000000e0 <set_reinicios>:
+  e0:	10 92 e3 14 	sts	0x14E3, r1	; 0x8014e3 <__RODATA_PM_OFFSET__+0x7f94e3>
+  e4:	8d e9       	ldi	r24, 0x9D	; 157
+  e6:	84 bf       	out	0x34, r24	; 52
+  e8:	83 e0       	ldi	r24, 0x03	; 3
+  ea:	80 93 00 10 	sts	0x1000, r24	; 0x801000 <__RODATA_PM_OFFSET__+0x7f9000>
+  ee:	08 95       	ret
+
+000000f0 <main>:
  * @brief Funcion principal para el manejo de registros
  *
  */
 int main()
 {
 	CLOCK32K_init();
-  e0:	0e 94 48 00 	call	0x90	; 0x90 <CLOCK32K_init>
+  f0:	0e 94 48 00 	call	0x90	; 0x90 <CLOCK32K_init>
 	erase_EEPROM();
-  e4:	0e 94 51 00 	call	0xa2	; 0xa2 <erase_EEPROM>
-	config_Sensors('i','i',2);
-  e8:	42 e0       	ldi	r20, 0x02	; 2
-  ea:	50 e0       	ldi	r21, 0x00	; 0
-  ec:	69 e6       	ldi	r22, 0x69	; 105
-  ee:	70 e0       	ldi	r23, 0x00	; 0
-  f0:	89 e6       	ldi	r24, 0x69	; 105
-  f2:	90 e0       	ldi	r25, 0x00	; 0
-  f4:	0e 94 5f 00 	call	0xbe	; 0xbe <config_Sensors>
-  f8:	ff cf       	rjmp	.-2      	; 0xf8 <main+0x18>
+  f4:	0e 94 51 00 	call	0xa2	; 0xa2 <erase_EEPROM>
+	config_Sensors('i','i',100);
+  f8:	44 e6       	ldi	r20, 0x64	; 100
+  fa:	50 e0       	ldi	r21, 0x00	; 0
+  fc:	69 e6       	ldi	r22, 0x69	; 105
+  fe:	70 e0       	ldi	r23, 0x00	; 0
+ 100:	89 e6       	ldi	r24, 0x69	; 105
+ 102:	90 e0       	ldi	r25, 0x00	; 0
+ 104:	0e 94 5f 00 	call	0xbe	; 0xbe <config_Sensors>
+	set_reinicios();
+ 108:	0e 94 70 00 	call	0xe0	; 0xe0 <set_reinicios>
+ 10c:	ff cf       	rjmp	.-2      	; 0x10c <__EEPROM_REGION_LENGTH__+0xc>
 
-000000fa <_exit>:
-  fa:	f8 94       	cli
+0000010e <_exit>:
+ 10e:	f8 94       	cli
 
-000000fc <__stop_program>:
-  fc:	ff cf       	rjmp	.-2      	; 0xfc <__stop_program>
+00000110 <__stop_program>:
+ 110:	ff cf       	rjmp	.-2      	; 0x110 <__stop_program>
