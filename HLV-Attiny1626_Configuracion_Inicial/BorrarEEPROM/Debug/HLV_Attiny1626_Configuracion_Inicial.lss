@@ -140,14 +140,14 @@ int main()
   f8:	0e 94 48 00 	call	0x90	; 0x90 <CLOCK32K_init>
 	erase_EEPROM();
   fc:	0e 94 51 00 	call	0xa2	; 0xa2 <erase_EEPROM>
-	config_Sensors('i','i',5000);
+	config_Sensors('A','A',1000);
  100:	20 e0       	ldi	r18, 0x00	; 0
- 102:	30 e4       	ldi	r19, 0x40	; 64
- 104:	4c e9       	ldi	r20, 0x9C	; 156
- 106:	55 e4       	ldi	r21, 0x45	; 69
- 108:	69 e6       	ldi	r22, 0x69	; 105
+ 102:	30 e0       	ldi	r19, 0x00	; 0
+ 104:	4a e7       	ldi	r20, 0x7A	; 122
+ 106:	54 e4       	ldi	r21, 0x44	; 68
+ 108:	61 e4       	ldi	r22, 0x41	; 65
  10a:	70 e0       	ldi	r23, 0x00	; 0
- 10c:	89 e6       	ldi	r24, 0x69	; 105
+ 10c:	81 e4       	ldi	r24, 0x41	; 65
  10e:	90 e0       	ldi	r25, 0x00	; 0
  110:	0e 94 5f 00 	call	0xbe	; 0xbe <config_Sensors>
  114:	ff cf       	rjmp	.-2      	; 0x114 <__EEPROM_REGION_LENGTH__+0x14>

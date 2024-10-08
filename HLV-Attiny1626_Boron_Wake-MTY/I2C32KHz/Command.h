@@ -336,6 +336,7 @@ void executeCommand(char *command){
 											if(s1 != 0 && s2 != 0){
 												printf("RF%.2fRVO%.2f\n",caudal,bateria);
 												caudal = 0;
+												pulsos = 0;
 												bateria = 0;
 											}
 										}
@@ -432,7 +433,7 @@ void executeCommand(char *command){
 																	//Switch de tipo de flujo
 																	//0 caudal - 1 volumen
 																	if(strstr(command,"SFT")!= NULL){
-																		int actual = read_EEPROM(5352);
+																		int actual = read_EEPROM(5355);
 																		if(actual == 1){
 																			write_EEPROM(5355,0x00);
 																		}

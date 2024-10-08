@@ -157,7 +157,7 @@ int main()
 {
 	CLOCK32K_init();
 	erase_EEPROM();
-	config_Sensors('i','i',5000);
+	config_Sensors('A','A',1000);
 	//calibrate_sensor(9.172461,4.777018,1);
 	//calibrate_sensor(9.073957,4.540608,2);
 	
