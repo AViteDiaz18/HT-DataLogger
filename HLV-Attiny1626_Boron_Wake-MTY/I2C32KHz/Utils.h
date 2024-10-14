@@ -97,17 +97,6 @@ void PORT_LOWPOWER_Init()
  * @brief Funcion que forza el estado IDLE Sleep en el microcontrolador
  *
  */
-
-void Sleep_Micro(){
-	set_sleep_mode(SLEEP_MODE_IDLE);
-	cli();
-	sleep_enable();
-	
-	sei();
-	sleep_cpu();
-	sleep_disable();
-}
-
 /**
  * @brief Funcion que cambia el reloj principal del microcontrolador a 32KHz
  *

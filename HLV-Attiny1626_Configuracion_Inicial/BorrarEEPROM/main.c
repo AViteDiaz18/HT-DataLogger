@@ -10,6 +10,7 @@
  */
 
 #include <avr/io.h>
+#include <stdio.h>
 
 /**
  * @brief Funcion que habilita el reloj de 32KHz en Attiny1626
@@ -85,7 +86,7 @@ void erase_EEPROM(){
 *		4 = 10000LPS
 *	
 */
-void config_Sensors(char *S1, char *S2, float flujo){
+void config_Sensors(char *S1, char *S2, float flujo, char *t_caudal){
 	Flotante flow;
 	flow.f = flujo;
 	*(uint8_t *)(5348) = S1;
@@ -106,6 +107,18 @@ void config_Sensors(char *S1, char *S2, float flujo){
 	*(uint8_t *)(5359) = flow.dato[3];
 	CPU_CCP = CCP_SPM_gc;
 	NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
+	if(strstr(t_caudal,"Volumen")!= NULL){
+		*(uint8_t *)(5355) = 0;
+		CPU_CCP = CCP_SPM_gc;
+		NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
+	}
+	else{
+		if (strstr(t_caudal,"Caudal")!= NULL){
+			*(uint8_t *)(5355) = 1;
+			CPU_CCP = CCP_SPM_gc;
+			NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
+		}
+	}
 }
 
 /**
@@ -157,7 +170,7 @@ int main()
 {
 	CLOCK32K_init();
 	erase_EEPROM();
-	config_Sensors('A','A',1000);
+	config_Sensors('A','A',100,"Caudal");
 	//calibrate_sensor(9.172461,4.777018,1);
 	//calibrate_sensor(9.073957,4.540608,2);
 	

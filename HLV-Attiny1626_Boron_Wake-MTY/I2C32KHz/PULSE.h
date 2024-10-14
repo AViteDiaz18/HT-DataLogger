@@ -28,7 +28,11 @@ unsigned long int pulsos = 0;
  * @brief Variable que contiene el dato de flujo ya en conversion
  *
  */
+float sumatoria = 0;
 float caudal = 0;
+float volumen = 0;
+float t_actual;
+float t_restante;
 
 /**
  * @brief Funcion que habilita el uso de interrupciones externas de vector C
@@ -37,26 +41,25 @@ float caudal = 0;
  *
  */
 ISR (PORTC_PORT_vect){
-	//_delay_ms(100);
-	Flotante valor;
+	t_actual = segundos;
+	t_restante = (float)(TCA0.SINGLE.CNT);
 	pulsos++;
-	TCA0_stop();
+	//TCA0_stop();
+	TCA0.SINGLE.CNT = 0;
+	segundos = 0;
 	wdt_reset();
-	valor.dato[0] = read_EEPROM(5356);
-	valor.dato[1] = read_EEPROM(5357);
-	valor.dato[2] = read_EEPROM(5358);
-	valor.dato[3] = read_EEPROM(5359);
 	//Agregar el manejo de tiempo entre pulsos
-	caudal = pulsos*valor.f;
+	//caudal = count*valor.f/(t_actual + t_restante);
+	//printf("Tiempo entre pulsos: %0.2f\r", t_actual + t_restante/32768);
+	//printf("Caudal: %0.2f\r", (count*valor.f)/(t_actual + t_restante/32768));
 	wdt_reset();
-	count++;
 	if(verbose == 1){
-		printf("Caudal%.2f\r", caudal);
+		printf("Tiempo%.2f\r", t_actual + t_restante/32768);
 	}
 	//executeCommand("MS\r");
 	//memset(command, 0, MAX_COMMAND_LEN);
 	PORTC_INTFLAGS |= PIN3_bm;
-	TCA0_init();
+	//TCA0_init();
 	
 	//count++;
 	//printf("%u\r", count);

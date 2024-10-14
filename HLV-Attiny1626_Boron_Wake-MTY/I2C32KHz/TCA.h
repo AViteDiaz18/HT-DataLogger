@@ -26,7 +26,7 @@ int verbose = 0;
  * @brief Variable para el manejo de medio segundo
  *
  */
-volatile int ms500 = 0;
+volatile int ms250 = 0;
 /**
  * @brief Variable para el conteo de una hora
  *
@@ -54,7 +54,7 @@ volatile uint16_t minutos = 0;
  *
  */
 void TCA0_init() {
-	TCA0.SINGLE.PER = 16384; // Establece el valor de comparación para aproximadamente 1 segundo
+	TCA0.SINGLE.PER = 32768; // Establece el valor de comparación para aproximadamente 1 segundo
 	TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc | TCA_SINGLE_ENABLE_bm; // Configura el prescaler a 1:1 y habilita el temporizador
 	TCA0.SINGLE.INTCTRL = TCA_SINGLE_OVF_bm; // Habilita la interrupción por desbordamiento
 }
@@ -75,7 +75,8 @@ void TCA0_stop(){
  */
 ISR(TCA0_OVF_vect){
 	hr++;
-	ms500++;
+	segundos++;
+	//printf("Segundos: %d\r", ms500);
 	TCA0.SINGLE.INTFLAGS = 0x01;
 	if(verbose == 1){
 		//printf("Ms500 = %d\r", ms500);

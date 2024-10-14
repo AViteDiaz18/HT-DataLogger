@@ -64,7 +64,7 @@ int main(void)
 	WDT.CTRLA = WDT_PERIOD_8KCLK_gc;
 	memset(command, 0, MAX_COMMAND_LEN);
 
-	//TCA0_init();
+	TCA0_init();
 	USART0_init();
 	
 	sei();

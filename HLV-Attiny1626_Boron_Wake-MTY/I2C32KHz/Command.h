@@ -307,37 +307,89 @@ void executeCommand(char *command){
 									}
 									else{
 										if(strcmp(command,"RT\r") == 0){
-											//printf("Bandera1: %d, Bandera2: %d",s1,s2);
-											if(s1 == 0 && s2 == 1 && read_EEPROM(5352) == 0){
-												printf("RH%.2fRL%.2fRVO%.2f\n",presion1,caudal,bateria);
-												vol1 = 0;
+											Flotante valor;
+											valor.dato[0] = read_EEPROM(5356);
+											valor.dato[1] = read_EEPROM(5357);
+											valor.dato[2] = read_EEPROM(5358);
+											valor.dato[3] = read_EEPROM(5359);
+											if ((t_actual + t_restante) == 0)
 												caudal = 0;
-												presion1 = 0;
-												bateria = 0;
-											}
-											if(s1 == 0 && s2 == 0){
-												//CSV
-												if(read_EEPROM(5352) == 0){
-													printf("RH%.2fRL%.2fRQ%.2fRVO%.2f\n",presion1,caudal,presion2,bateria);
+											else
+												caudal = (valor.f)/(t_actual + t_restante/32768);
+											volumen = pulsos*valor.f;
+											t_actual = 0;
+											t_restante = 0;
+											//1P1F
+											if(s1 == 0 && s2 == 1){
+												if(read_EEPROM(5355) == 0){
+													//Volumetrico
+													printf("RH%.2fRL%.0fRVO%.2f\n",presion1,volumen,bateria);
+													vol1 = 0;
+													caudal = 0;
+													volumen = 0;
+													pulsos = 0;
+													presion1 = 0;
+													bateria = 0;
 												}
 												else{
-													printf("RH%.2fRL%.2fRQ%.2fRVO%.2f\n",presion2,caudal,presion1,bateria);
+													//Caudal
+													printf("RH%.2fRF%.2fRVO%.2f\n",presion1,caudal,bateria);
+													vol1 = 0;
+													caudal = 0;
+													presion1 = 0;
+													bateria = 0;
 												}
-												//MQTT - FTP
-												//printf("RH%.2fRQ%.2fRL%.2fRVO%.2f\n",presion1,presion2,caudal,bateria);
-												vol1 = 0;
-												vol2 = 0;
-												caudal = 0;
-												pulsos = 0;
-												presion1 = 0;
-												presion2 = 0;
-												bateria = 0;
 											}
+											//2P1F
+											if(s1 == 0 && s2 == 0){
+												//CSV
+												if(read_EEPROM(5355) == 0){
+													//Volumetrico
+													if(read_EEPROM(5352) == 0){
+														printf("RH%.2fRL%.0fRQ%.2fRVO%.2f\n",presion1,volumen,presion2,bateria);
+													}
+													else{
+														printf("RH%.2fRL%.0fRQ%.2fRVO%.2f\n",presion2,volumen,presion1,bateria);	
+													}
+													vol1 = 0;
+													vol2 = 0;
+													volumen = 0;
+													pulsos = 0;
+													presion1 = 0;
+													presion2 = 0;
+													bateria = 0;
+												}
+												else{
+													//Caudal
+													if(read_EEPROM(5352) == 0){
+														printf("RH%.2fRF%.2fRQ%.2fRVO%.2f\n",presion1,caudal,presion2,bateria);
+													}
+													else{
+														printf("RH%.2fRF%.2fRQ%.2fRVO%.2f\n",presion2,caudal,presion1,bateria);
+													}
+													vol1 = 0;
+													vol2 = 0;
+													caudal = 0;
+													presion1 = 0;
+													presion2 = 0;
+													bateria = 0;
+												}
+											}
+											//1F
 											if(s1 != 0 && s2 != 0){
-												printf("RF%.2fRVO%.2f\n",caudal,bateria);
-												caudal = 0;
-												pulsos = 0;
-												bateria = 0;
+												//Volumetrico
+												if(read_EEPROM(5355) == 0){
+													printf("RL%.0fRVO%.2f\n",volumen,bateria);
+													volumen = 0;
+													pulsos = 0;
+													bateria = 0;
+												}
+												else{
+													//Caudal
+													printf("RF%.2fRVO%.2f\n",caudal,bateria);
+													caudal = 0;
+													bateria = 0;
+												}
 											}
 										}
 										else{
@@ -431,13 +483,22 @@ void executeCommand(char *command){
 																}
 																else{
 																	//Switch de tipo de flujo
-																	//0 caudal - 1 volumen
+																	//0 volumen - 1 caudal
 																	if(strstr(command,"SFT")!= NULL){
 																		int actual = read_EEPROM(5355);
 																		if(actual == 1){
+																			caudal = 0;
+																			pulsos = 0;
+																			volumen = 0;
+																			count = 0;
+																			TCA0_stop();
 																			write_EEPROM(5355,0x00);
 																		}
 																		else{
+																			caudal = 0;
+																			pulsos = 0;
+																			volumen = 0;
+																			count = 0;
 																			write_EEPROM(5355,0x01);
 																		}
 																	}
