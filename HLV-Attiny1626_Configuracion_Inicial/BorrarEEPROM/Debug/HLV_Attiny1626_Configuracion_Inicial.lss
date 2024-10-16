@@ -170,16 +170,16 @@ int main()
  13c:	0e 94 48 00 	call	0x90	; 0x90 <CLOCK32K_init>
 	erase_EEPROM();
  140:	0e 94 51 00 	call	0xa2	; 0xa2 <erase_EEPROM>
-	config_Sensors('A','A',100,"Caudal");
+	config_Sensors('i','i',1000,"Caudal");
  144:	0e e9       	ldi	r16, 0x9E	; 158
  146:	11 e8       	ldi	r17, 0x81	; 129
  148:	20 e0       	ldi	r18, 0x00	; 0
  14a:	30 e0       	ldi	r19, 0x00	; 0
- 14c:	48 ec       	ldi	r20, 0xC8	; 200
- 14e:	52 e4       	ldi	r21, 0x42	; 66
- 150:	61 e4       	ldi	r22, 0x41	; 65
+ 14c:	4a e7       	ldi	r20, 0x7A	; 122
+ 14e:	54 e4       	ldi	r21, 0x44	; 68
+ 150:	69 e6       	ldi	r22, 0x69	; 105
  152:	70 e0       	ldi	r23, 0x00	; 0
- 154:	81 e4       	ldi	r24, 0x41	; 65
+ 154:	89 e6       	ldi	r24, 0x69	; 105
  156:	90 e0       	ldi	r25, 0x00	; 0
  158:	0e 94 5f 00 	call	0xbe	; 0xbe <config_Sensors>
  15c:	ff cf       	rjmp	.-2      	; 0x15c <main+0x20>

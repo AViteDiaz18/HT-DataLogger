@@ -170,7 +170,13 @@ int main()
 {
 	CLOCK32K_init();
 	erase_EEPROM();
+	config_Sensors('i','i',1000,"Caudal");
+/*<<<<<<< Updated upstream
 	config_Sensors('A','A',100,"Caudal");
+=======
+	config_Sensors('i','A',0);
+	set_reinicios();
+>>>>>>> Stashed changes*/
 	//calibrate_sensor(9.172461,4.777018,1);
 	//calibrate_sensor(9.073957,4.540608,2);
 	

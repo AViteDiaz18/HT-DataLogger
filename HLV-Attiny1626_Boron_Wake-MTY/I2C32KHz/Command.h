@@ -441,7 +441,11 @@ void executeCommand(char *command){
 													write_EEPROM(5357,flow.dato[1]);
 													write_EEPROM(5358,flow.dato[2]);
 													write_EEPROM(5359,flow.dato[3]);
-													printf("LT\n");
+													flow.dato[0] = read_EEPROM(5356);
+													flow.dato[1] = read_EEPROM(5357);
+													flow.dato[2] = read_EEPROM(5358);
+													flow.dato[3] = read_EEPROM(5359);
+													printf("LT,%.2f\n", flow.f);
 												}
 												else{
 													if (strcmp(command,"VR\r") == 0){
