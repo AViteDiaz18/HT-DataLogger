@@ -13,11 +13,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   4 .debug_aranges 00000048  00000000  00000000  000001d8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00001d43  00000000  00000000  00000220  2**0
+  5 .debug_info   00001d42  00000000  00000000  00000220  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000019b1  00000000  00000000  00001f63  2**0
+  6 .debug_abbrev 000019b1  00000000  00000000  00001f62  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000044c  00000000  00000000  00003914  2**0
+  7 .debug_line   0000044c  00000000  00000000  00003913  2**0
                   CONTENTS, READONLY, DEBUGGING
   8 .debug_frame  00000090  00000000  00000000  00003d60  2**2
                   CONTENTS, READONLY, DEBUGGING
@@ -139,10 +139,10 @@ int main()
   f0:	0e 94 48 00 	call	0x90	; 0x90 <CLOCK32K_init>
 	erase_EEPROM();
   f4:	0e 94 51 00 	call	0xa2	; 0xa2 <erase_EEPROM>
-	config_Sensors('i','i',100);
-  f8:	44 e6       	ldi	r20, 0x64	; 100
+	config_Sensors('i','A',0);
+  f8:	40 e0       	ldi	r20, 0x00	; 0
   fa:	50 e0       	ldi	r21, 0x00	; 0
-  fc:	69 e6       	ldi	r22, 0x69	; 105
+  fc:	61 e4       	ldi	r22, 0x41	; 65
   fe:	70 e0       	ldi	r23, 0x00	; 0
  100:	89 e6       	ldi	r24, 0x69	; 105
  102:	90 e0       	ldi	r25, 0x00	; 0

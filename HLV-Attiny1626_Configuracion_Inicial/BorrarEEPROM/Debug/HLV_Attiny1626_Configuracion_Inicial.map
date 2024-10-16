@@ -447,10 +447,10 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x1d43
+.debug_info     0x00000000     0x1d42
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000     0x18eb C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.10.348/gcc/dev/attiny1626/avrxmega3/crtattiny1626.o
- .debug_info    0x000018eb      0x458 main.o
+ .debug_info    0x000018eb      0x457 main.o
 
 .debug_abbrev   0x00000000     0x19b1
  *(.debug_abbrev)
