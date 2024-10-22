@@ -61,7 +61,7 @@ ISR (PORTC_PORT_vect){
 	PORTC_INTFLAGS |= PIN3_bm;
 	//TCA0_init();
 	
-	//count++;
+	count++;
 	//printf("%u\r", count);
 	
 }

@@ -306,6 +306,7 @@ void executeCommand(char *command){
 										//count = 0;
 									}
 									else{
+										
 										if(strcmp(command,"RT\r") == 0){
 											Flotante valor;
 											valor.dato[0] = read_EEPROM(5356);
@@ -446,6 +447,7 @@ void executeCommand(char *command){
 													flow.dato[2] = read_EEPROM(5358);
 													flow.dato[3] = read_EEPROM(5359);
 													printf("LT,%.2f\n", flow.f);
+													
 												}
 												else{
 													if (strcmp(command,"VR\r") == 0){
