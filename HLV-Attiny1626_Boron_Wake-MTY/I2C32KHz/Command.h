@@ -402,11 +402,18 @@ void executeCommand(char *command){
 												}
 												else{
 													Flotante Volumen;
+													Flotante valor;
+													valor.dato[0] = read_EEPROM(5356);
+													valor.dato[1] = read_EEPROM(5357);
+													valor.dato[2] = read_EEPROM(5358);
+													valor.dato[3] = read_EEPROM(5359);
 													int desplazo = read_EEPROM(5353)*4;//*(uint8_t*)(5351)*4;
 													for(int k=0; k <= 3; k++){
 														Volumen.dato[k] = read_EEPROM(k+desplazo+5120);//*(uint8_t *)(k+desplazo+5120);
 													}
+													Volumen.f += (float)count*valor.f/1000;
 													printf("AC%.2f\n", Volumen.f);
+													count = 0;
 													for(int k=0; k <= 3; k++){
 														write_EEPROM(k+desplazo+5120,0);
 													}
@@ -467,66 +474,74 @@ void executeCommand(char *command){
 															//Switch de activacion de acumulado
 															//0 desactivado - 1 activado
 															if(command[0] == 'S' && command[1] == 'A' && command[2] == 'C'){
-																int actual = read_EEPROM(5354);
-																if(actual == 1){
+																//int actual = read_EEPROM(5354);
+																if(command[3] == '0'){
 																	write_EEPROM(5354,0x00);
+																	printf("%s\n",command);
 																}
-																else{
+																else if(command[3] == '1'){
 																	write_EEPROM(5354,0x01);
+																	printf("%s\n",command);
 																}
 															}
 															else{
 																//Switch de cambio de sensores
 																//0 original - 1 invertido
-																if(strcmp(command,"SSW\r") == 0){
-																	int actual = read_EEPROM(5352);
-																	if(actual == 1){
+																//if(strcmp(command,"SSW\r") == 0){
+																if(command[0] == 'S' && command[1] == 'S' && command[2] == 'W'){
+																	//int actual = read_EEPROM(5352);
+																	if(command[3] == '0'){
 																		write_EEPROM(5352,0x00);
+																		printf("%s\n",command);
 																	}
-																	else{
+																	else if(command[3] == '1'){
 																		write_EEPROM(5352,0x01);
+																		printf("%s\n",command);
 																	}
 																}
 																else{
 																	//Switch de tipo de flujo
 																	//0 volumen - 1 caudal
-																	if(strstr(command,"SFT")!= NULL){
-																		int actual = read_EEPROM(5355);
-																		if(actual == 1){
+																	//if(strstr(command,"SFT")!= NULL){
+																	if(command[0] == 'S' && command[1] == 'F' && command[2] == 'T'){
+																		//int actual = read_EEPROM(5355);
+																		if(command[3] == '0'){
 																			caudal = 0;
 																			pulsos = 0;
 																			volumen = 0;
 																			count = 0;
 																			TCA0_stop();
 																			write_EEPROM(5355,0x00);
+																			printf("%s\n",command);
 																		}
-																		else{
+																		else if(command[3] == '1'){
 																			caudal = 0;
 																			pulsos = 0;
 																			volumen = 0;
 																			count = 0;
 																			write_EEPROM(5355,0x01);
-																		}
+																			printf("%s\n",command);
+																		}																	
 																	}
 																	else{
 																		if(command[0] == 'G' && command[1] == 'A' && command[2] == 'C'){
-																			printf("GAC%d",read_EEPROM(5354));
+																			printf("GAC%d\n",read_EEPROM(5354));
 																		}
 																		else{
 																			if(command[0] == 'G' && command[1] == 'S' && command[2] == 'W'){
-																				printf("GSW%d",read_EEPROM(5352));
+																				printf("GSW%d\n",read_EEPROM(5352));
 																			}
 																			else{
 																				if(command[0] == 'G' && command[1] == 'S' && command[2] == '1'){
-																					printf("GS1%c",read_EEPROM(5348));
+																					printf("GS1%c\n",read_EEPROM(5348));
 																				}
 																				else{
 																					if(command[0] == 'G' && command[1] == 'S' && command[2] == '2'){
-																						printf("GS2%c",read_EEPROM(5349));
+																						printf("GS2%c\n",read_EEPROM(5349));
 																					}
 																					else{
 																						if(command[0] == 'G' && command[1] == 'F' && command[2] == 'T'){
-																							printf("GFT%d",read_EEPROM(5355));
+																							printf("GFT%d\n",read_EEPROM(5355));
 																						}
 																					}
 																				}

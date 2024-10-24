@@ -63,7 +63,6 @@ ISR (PORTC_PORT_vect){
 	
 	count++;
 	//printf("%u\r", count);
-	
 }
 
 #endif /* PULSE_H_ */
