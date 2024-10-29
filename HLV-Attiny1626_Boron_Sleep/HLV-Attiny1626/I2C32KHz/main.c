@@ -66,7 +66,7 @@ int main(void)
 	USART0_init();
 	
 	_delay_ms(100);
-	//printf("Ayuda\r");
+	printf("Ayuda\r");
 	
 	TCB0_init();
 

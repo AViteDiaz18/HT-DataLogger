@@ -356,7 +356,33 @@ void executeCommand(char *command){
 										}*/
 									}
 									else{
-										printf("Incorrect Command\n");
+										if(strstr(command, "ATM") != NULL){
+											Flotante AT;
+											char *token = strtok(command, ",");
+											int i = 0;
+											if(token != NULL){
+												while(token != NULL){
+													switch(i){
+														case 0:
+														break;
+														case 1:
+														sscanf(token,"%f",&AT.f);
+														break;
+													}
+													token = strtok(NULL, " ");
+													i++;
+												}
+											}
+											wdt_reset();
+											write_EEPROM(5120,AT.dato[0]);
+											write_EEPROM(5121,AT.dato[1]);
+											write_EEPROM(5122,AT.dato[2]);
+											write_EEPROM(5123,AT.dato[3]);
+											printf("AT\n");
+										}
+										else{
+											printf("Incorrect Command\n");	
+										}
 									}
 								}
 							}

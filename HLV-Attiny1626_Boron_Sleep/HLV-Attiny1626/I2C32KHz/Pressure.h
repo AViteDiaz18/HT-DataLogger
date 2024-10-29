@@ -68,7 +68,7 @@ float get_PressureI2C(int Press, int x){
 }
 
 float get_LevelADC(float vol, int posicion){
-	Flotante Zero,A,B,CL;
+	Flotante Zero,A,B,CL,AT;
 	float Level = 0;
 	if(posicion == 1){
 		for (int i = 0; i <= 3; i++){
@@ -86,11 +86,17 @@ float get_LevelADC(float vol, int posicion){
 			}
 		}
 	}
-	if(vol < 0.911833){
+	
+	AT.dato[0] = read_EEPROM(5120);
+	AT.dato[1] = read_EEPROM(5121);
+	AT.dato[2] = read_EEPROM(5122);
+	AT.dato[3] = read_EEPROM(5123);
+	//0.911833
+	if(vol < AT.f){
 		Level = 0;
 	}
 	else{
-		Level = ((A.f * vol - B.f) * 0.703089) - ((A.f * 0.911833 - B.f) * 0.703089);
+		Level = ((A.f * vol - B.f) * 0.703089) - ((A.f * AT.f - B.f) * 0.703089);
 	}
 	
 	CL.dato[0] = read_EEPROM(5124);
