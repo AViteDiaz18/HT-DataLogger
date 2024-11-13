@@ -394,16 +394,16 @@ int main()
  21a:	8e e4       	ldi	r24, 0x4E	; 78
  21c:	90 e0       	ldi	r25, 0x00	; 0
  21e:	0e 94 5f 00 	call	0xbe	; 0xbe <config_Sensors>
-	calibrate_sensor(24.965048931,9.916117436,1);
+	calibrate_sensor(15.625,7.5,1);
  222:	01 e0       	ldi	r16, 0x01	; 1
  224:	10 e0       	ldi	r17, 0x00	; 0
- 226:	2b e6       	ldi	r18, 0x6B	; 107
- 228:	38 ea       	ldi	r19, 0xA8	; 168
- 22a:	4e e1       	ldi	r20, 0x1E	; 30
- 22c:	51 e4       	ldi	r21, 0x41	; 65
- 22e:	6c e6       	ldi	r22, 0x6C	; 108
- 230:	78 eb       	ldi	r23, 0xB8	; 184
- 232:	87 ec       	ldi	r24, 0xC7	; 199
+ 226:	20 e0       	ldi	r18, 0x00	; 0
+ 228:	30 e0       	ldi	r19, 0x00	; 0
+ 22a:	40 ef       	ldi	r20, 0xF0	; 240
+ 22c:	50 e4       	ldi	r21, 0x40	; 64
+ 22e:	60 e0       	ldi	r22, 0x00	; 0
+ 230:	70 e0       	ldi	r23, 0x00	; 0
+ 232:	8a e7       	ldi	r24, 0x7A	; 122
  234:	91 e4       	ldi	r25, 0x41	; 65
  236:	0e 94 78 00 	call	0xf0	; 0xf0 <calibrate_sensor>
 	set_reinicios();
