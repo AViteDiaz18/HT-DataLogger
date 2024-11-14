@@ -15,6 +15,7 @@
 #include "PULSE.h"
 #include "TCB.h"
 
+int calib = 0;
 int send = 0;
 float vol1 = 0;
 float vol2 = 0;
@@ -321,14 +322,14 @@ void executeCommand(char *command){
 													else{
 														if(sensor1 == 'N' && sensor2 == 'A'){
 															printf("RN%.2fRVO%.2f\n", nivel1,bateria);
-															vol1 = 0;
+															//vol1 = 0;	
 															nivel1 = 0;
 															bateria = 0;
 														}
 														else{
 															if(sensor1 == 'A' && sensor2 == 'N'){
 																printf("RN%.2fRVO%.2f\n", nivel2,bateria);
-																vol2 = 0;
+																//vol2 = 0;	
 																nivel2 = 0;
 																bateria = 0;
 															}
@@ -356,21 +357,14 @@ void executeCommand(char *command){
 										}*/
 									}
 									else{
-										if(strstr(command, "ATM") != NULL){
+										if(strcmp(command, "ATM\r") == 0){
 											Flotante AT;
-											char *token = strtok(command, ",");
-											int i = 0;
-											if(token != NULL){
-												while(token != NULL){
-													switch(i){
-														case 0:
-														break;
-														case 1:
-														sscanf(token,"%f",&AT.f);
-														break;
-													}
-													token = strtok(NULL, " ");
-													i++;
+											if(sensor1 == 'N' && sensor2 == 'A'){
+												AT.f = vol1;
+											}
+											else{
+												if (sensor1 == 'A' && sensor2 == 'N'){
+													AT.f = vol2;
 												}
 											}
 											wdt_reset();
@@ -378,7 +372,16 @@ void executeCommand(char *command){
 											write_EEPROM(5121,AT.dato[1]);
 											write_EEPROM(5122,AT.dato[2]);
 											write_EEPROM(5123,AT.dato[3]);
-											printf("AT\n");
+											if(sensor1 == 'N' && sensor2 == 'A'){
+												printf("ATM%.2f\n", get_LevelCalib(vol1,1));
+												vol1 = 0;
+											}
+											else{
+												if (sensor1 == 'A' && sensor2 == 'N'){
+													printf("ATM%.2f\n", get_LevelCalib(vol2,2));
+													vol2 = 0;
+												}
+											}
 										}
 										else{
 											printf("Incorrect Command\n");	

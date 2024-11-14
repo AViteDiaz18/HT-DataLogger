@@ -66,6 +66,34 @@ float get_PressureI2C(int Press, int x){
 	}
 	return P;
 }
+float get_LevelCalib(float vol, int posicion){
+	Flotante Zero,A,B,AT;
+	float Level = 0;
+	if(posicion == 1){
+		for (int i = 0; i <= 3; i++){
+			Zero.dato[i] = read_EEPROM(5364+i);
+			A.dato[i] = read_EEPROM(5368+i);
+			B.dato[i] = read_EEPROM(5372+i);
+		}
+	}
+	else{
+		if(posicion == 2){
+			for (int i = 0; i <= 3; i++){
+				Zero.dato[i] = read_EEPROM(5352+i);
+				A.dato[i] = read_EEPROM(5356+i);
+				B.dato[i] = read_EEPROM(5360+i);
+			}
+		}
+	}
+	
+	AT.dato[0] = read_EEPROM(5120);
+	AT.dato[1] = read_EEPROM(5121);
+	AT.dato[2] = read_EEPROM(5122);
+	AT.dato[3] = read_EEPROM(5123);
+	
+	Level = ((A.f * AT.f - B.f) * 0.703089);
+	return Level;
+}
 
 float get_LevelADC(float vol, int posicion){
 	Flotante Zero,A,B,CL,AT;
