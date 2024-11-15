@@ -458,14 +458,14 @@ void executeCommand(char *command){
 												}
 												else{
 													if (strcmp(command,"VR\r") == 0){
-														printf("Right Move\n");
+														//printf("Right Move\n");
 														PORTB.OUT |= PIN2_bm;
 														_delay_ms(100);
 														PORTB.OUT &= ~PIN2_bm;
 													}
 													else{
 														if (strcmp(command,"VL\r") == 0){
-															printf("Left Move\n");
+															//printf("Left Move\n");
 															PORTC.OUT |= PIN1_bm;
 															_delay_ms(100);
 															PORTC.OUT &= ~PIN1_bm;
