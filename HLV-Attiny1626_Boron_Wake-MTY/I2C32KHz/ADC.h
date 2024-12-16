@@ -67,6 +67,10 @@ float get_Voltage(int pin){
 		ADC0.CTRLA = ADC_ENABLE_bm;
 		ADC0.MUXPOS = ADC_MUXPOS_AIN5_gc;
 		break;
+		case 4:
+		ADC0.CTRLA = ADC_ENABLE_bm;
+		ADC0.MUXPOS = ADC_MUXPOS_AIN4_gc;
+		break;
 		case 6:
 		ADC0.CTRLA = ADC_ENABLE_bm;
 		ADC0.MUXPOS = ADC_MUXPOS_AIN6_gc;

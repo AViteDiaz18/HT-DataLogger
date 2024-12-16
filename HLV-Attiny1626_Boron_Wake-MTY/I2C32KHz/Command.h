@@ -43,6 +43,11 @@ float presion2 = 0;
  */
 float bateria = 0;
 /**
+ * @brief Variable para la obtencion de voltaje de la bateria de valvulas
+ *
+ */
+float bateria2 = 0;
+/**
  * @brief Variable auxiliar para el sensor 1
  *
  */
@@ -306,7 +311,6 @@ void executeCommand(char *command){
 										//count = 0;
 									}
 									else{
-										
 										if(strcmp(command,"RT\r") == 0){
 											Flotante valor;
 											valor.dato[0] = read_EEPROM(5356);
@@ -324,22 +328,19 @@ void executeCommand(char *command){
 											if(s1 == 0 && s2 == 1){
 												if(read_EEPROM(5355) == 0){
 													//Volumetrico
-													printf("RH%.2fRL%.0fRVO%.2f\n",presion1,volumen,bateria);
-													vol1 = 0;
+													printf("RH%.2fRL%.0fRVO%.2fRVP%.2f\n",presion1,volumen,bateria,bateria2);
 													caudal = 0;
 													volumen = 0;
 													pulsos = 0;
 													presion1 = 0;
-													bateria = 0;
 												}
 												else{
 													//Caudal
-													printf("RH%.2fRF%.2fRVO%.2f\n",presion1,caudal,bateria);
-													vol1 = 0;
+													printf("RH%.2fRF%.2fRVO%.2fRVP%.2f\n",presion1,caudal,bateria,bateria2);
 													caudal = 0;
 													presion1 = 0;
-													bateria = 0;
 												}
+												vol1 = 0;
 											}
 											//2P1F
 											if(s1 == 0 && s2 == 0){
@@ -347,10 +348,10 @@ void executeCommand(char *command){
 												if(read_EEPROM(5355) == 0){
 													//Volumetrico
 													if(read_EEPROM(5352) == 0){
-														printf("RH%.2fRL%.0fRQ%.2fRVO%.2f\n",presion1,volumen,presion2,bateria);
+														printf("RH%.2fRL%.0fRQ%.2fRVO%.2fRVP%.2f\n",presion1,volumen,presion2,bateria,bateria2);
 													}
 													else{
-														printf("RH%.2fRL%.0fRQ%.2fRVO%.2f\n",presion2,volumen,presion1,bateria);	
+														printf("RH%.2fRL%.0fRQ%.2fRVO%.2fRVP%.2f\n",presion2,volumen,presion1,bateria,bateria2);	
 													}
 													vol1 = 0;
 													vol2 = 0;
@@ -358,40 +359,39 @@ void executeCommand(char *command){
 													pulsos = 0;
 													presion1 = 0;
 													presion2 = 0;
-													bateria = 0;
 												}
 												else{
 													//Caudal
 													if(read_EEPROM(5352) == 0){
-														printf("RH%.2fRF%.2fRQ%.2fRVO%.2f\n",presion1,caudal,presion2,bateria);
+														printf("RH%.2fRF%.2fRQ%.2fRVO%.2fRVP%.2f\n",presion1,caudal,presion2,bateria,bateria2);
 													}
 													else{
-														printf("RH%.2fRF%.2fRQ%.2fRVO%.2f\n",presion2,caudal,presion1,bateria);
+														printf("RH%.2fRF%.2fRQ%.2fRVO%.2fRVP%.2f\n",presion2,caudal,presion1,bateria,bateria2);
 													}
 													vol1 = 0;
 													vol2 = 0;
 													caudal = 0;
 													presion1 = 0;
 													presion2 = 0;
-													bateria = 0;
 												}
 											}
 											//1F
 											if(s1 != 0 && s2 != 0){
 												//Volumetrico
 												if(read_EEPROM(5355) == 0){
-													printf("RL%.0fRVO%.2f\n",volumen,bateria);
+													printf("RL%.0fRVO%.2fRVP%.2f\n",volumen,bateria,bateria2);
 													volumen = 0;
 													pulsos = 0;
-													bateria = 0;
 												}
 												else{
 													//Caudal
-													printf("RF%.2fRVO%.2f\n",caudal,bateria);
+													printf("RF%.2fRVO%.2fRVP%.2f\n",caudal,bateria,bateria2);
 													caudal = 0;
-													bateria = 0;
+													
 												}
 											}
+											bateria = 0;
+											bateria2 = 0;
 										}
 										else{
 											if(strcmp(command,"AC\r") == 0){
@@ -460,15 +460,19 @@ void executeCommand(char *command){
 													if (strcmp(command,"VR\r") == 0){
 														//printf("Right Move\n");
 														PORTB.OUT |= PIN2_bm;
+														bateria2 = get_Voltage(4)*5;
 														_delay_ms(100);
 														PORTB.OUT &= ~PIN2_bm;
+														printf("GVR\n");
 													}
 													else{
 														if (strcmp(command,"VL\r") == 0){
 															//printf("Left Move\n");
 															PORTC.OUT |= PIN1_bm;
+															bateria2 = get_Voltage(4)*5;
 															_delay_ms(100);
 															PORTC.OUT &= ~PIN1_bm;
+															printf("GVL\n");
 														}
 														else{
 															//Switch de activacion de acumulado
