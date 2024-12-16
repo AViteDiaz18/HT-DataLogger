@@ -19,12 +19,13 @@
 #include "Utils.h"
 #include "Command.h"
 
-#define hora_acumulado 1800 //7200 //600
+#define hora_acumulado 7200 //600 //1800
 
 /**
  * @brief Funcion principal para el control del microcontrolador
  *
  */
+
 
 /*Cambios en EEPROM
  Sensor 1 en 5348

@@ -307,6 +307,7 @@ void executeCommand(char *command){
 												break;
 										}
 										PORTB.OUT &= ~PIN5_bm;
+										bateria2 = get_Voltage(4)*5;
 										bateria = get_Voltage(6)*5; //2 segundos
 										//count = 0;
 									}
