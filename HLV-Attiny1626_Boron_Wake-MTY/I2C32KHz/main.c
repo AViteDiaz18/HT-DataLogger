@@ -72,7 +72,7 @@ int main(void)
 	
 	//write_EEPROM(5120,0x00);
 	_delay_ms(100);
-	printf("Ayuda\n");
+	//printf("Ayuda\n");
     /* Replace with your application code */
     while (1) 
     {
