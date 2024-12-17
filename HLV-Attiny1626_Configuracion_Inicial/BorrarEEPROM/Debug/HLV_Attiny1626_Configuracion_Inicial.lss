@@ -3,29 +3,29 @@ HLV_Attiny1626_Configuracion_Inicial.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00803800  00803800  0000041e  2**0
+  0 .data         00000000  00803800  00803800  00000152  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000003ca  00000000  00000000  00000054  2**1
+  1 .text         000000fe  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  0000041e  2**0
+  2 .comment      00000030  00000000  00000000  00000152  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000450  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000184  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000048  00000000  00000000  00000490  2**0
+  4 .debug_aranges 00000048  00000000  00000000  000001c4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00001d87  00000000  00000000  000004d8  2**0
+  5 .debug_info   00001d35  00000000  00000000  0000020c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000019b1  00000000  00000000  0000225f  2**0
+  6 .debug_abbrev 000019af  00000000  00000000  00001f41  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000452  00000000  00000000  00003c10  2**0
+  7 .debug_line   00000446  00000000  00000000  000038f0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000090  00000000  00000000  00004064  2**2
+  8 .debug_frame  00000090  00000000  00000000  00003d38  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000ec7  00000000  00000000  000040f4  2**0
+  9 .debug_str    00000ec7  00000000  00000000  00003dc8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000019c  00000000  00000000  00004fbb  2**0
+ 10 .debug_loc    0000019c  00000000  00000000  00004c8f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000068  00000000  00000000  00005157  2**0
+ 11 .debug_ranges 00000068  00000000  00000000  00004e2b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -69,558 +69,80 @@ Disassembly of section .text:
   7e:	cd bf       	out	0x3d, r28	; 61
   80:	df e3       	ldi	r29, 0x3F	; 63
   82:	de bf       	out	0x3e, r29	; 62
-  84:	0e 94 05 01 	call	0x20a	; 0x20a <main>
-  88:	0c 94 e3 01 	jmp	0x3c6	; 0x3c6 <_exit>
+  84:	0e 94 70 00 	call	0xe0	; 0xe0 <main>
+  88:	0c 94 7d 00 	jmp	0xfa	; 0xfa <_exit>
 
 0000008c <__bad_interrupt>:
   8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000090 <CLOCK32K_init>:
-/**
- * @brief Funcion que habilita el reloj de 32KHz en Attiny1626
- *
- */
-static void CLOCK32K_init(){
-	CPU_CCP = CCP_IOREG_gc;
+			CPU_CCP = CCP_SPM_gc;
+			NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
+			
+		}
+	}
+}
   90:	88 ed       	ldi	r24, 0xD8	; 216
   92:	84 bf       	out	0x34, r24	; 52
-	CLKCTRL_MCLKCTRLB = 0 << CLKCTRL_PEN_bp;
   94:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <__RODATA_PM_OFFSET__+0x7f8061>
-	CPU_CCP = CCP_IOREG_gc;
   98:	84 bf       	out	0x34, r24	; 52
-	CLKCTRL_MCLKCTRLA = CLKCTRL_CLKSEL_OSCULP32K_gc;
   9a:	81 e0       	ldi	r24, 0x01	; 1
   9c:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <__RODATA_PM_OFFSET__+0x7f8060>
   a0:	08 95       	ret
 
 000000a2 <erase_EEPROM>:
-/**
-* @brief Borra todos los registros de la data EEPROM
-*
-*/
-void erase_EEPROM(){
-	for(int i = 5120; i < 5376; i++){
   a2:	e0 e0       	ldi	r30, 0x00	; 0
   a4:	f4 e1       	ldi	r31, 0x14	; 20
   a6:	06 c0       	rjmp	.+12     	; 0xb4 <erase_EEPROM+0x12>
-		*(uint8_t *)(i) = 0x00;
   a8:	11 92       	st	Z+, r1
-		CPU_CCP = CCP_SPM_gc;
   aa:	8d e9       	ldi	r24, 0x9D	; 157
   ac:	84 bf       	out	0x34, r24	; 52
-		NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
   ae:	83 e0       	ldi	r24, 0x03	; 3
   b0:	80 93 00 10 	sts	0x1000, r24	; 0x801000 <__RODATA_PM_OFFSET__+0x7f9000>
-/**
-* @brief Borra todos los registros de la data EEPROM
-*
-*/
-void erase_EEPROM(){
-	for(int i = 5120; i < 5376; i++){
   b4:	e1 15       	cp	r30, r1
   b6:	85 e1       	ldi	r24, 0x15	; 21
   b8:	f8 07       	cpc	r31, r24
   ba:	b4 f3       	brlt	.-20     	; 0xa8 <erase_EEPROM+0x6>
-		*(uint8_t *)(i) = 0x00;
-		CPU_CCP = CCP_SPM_gc;
-		NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
-	}
-}
   bc:	08 95       	ret
 
 000000be <config_Sensors>:
-*
-*		4 = 10000LPS
-*	
-*/
-void config_Sensors(char *S1, char *S2, char *S3){
-	*(uint8_t *)(5348) = S1;
   be:	80 93 e4 14 	sts	0x14E4, r24	; 0x8014e4 <__RODATA_PM_OFFSET__+0x7f94e4>
-	CPU_CCP = CCP_SPM_gc;
   c2:	9d e9       	ldi	r25, 0x9D	; 157
   c4:	94 bf       	out	0x34, r25	; 52
-	NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
   c6:	e0 e0       	ldi	r30, 0x00	; 0
   c8:	f0 e1       	ldi	r31, 0x10	; 16
   ca:	83 e0       	ldi	r24, 0x03	; 3
   cc:	80 83       	st	Z, r24
-	*(uint8_t *)(5349) = S2;
   ce:	60 93 e5 14 	sts	0x14E5, r22	; 0x8014e5 <__RODATA_PM_OFFSET__+0x7f94e5>
-	CPU_CCP = CCP_SPM_gc;
   d2:	94 bf       	out	0x34, r25	; 52
-	NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
   d4:	80 83       	st	Z, r24
-	*(uint8_t *)(5350) = S3;
   d6:	40 93 e6 14 	sts	0x14E6, r20	; 0x8014e6 <__RODATA_PM_OFFSET__+0x7f94e6>
-	CPU_CCP = CCP_SPM_gc;
   da:	94 bf       	out	0x34, r25	; 52
-	NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
   dc:	80 83       	st	Z, r24
   de:	08 95       	ret
 
-000000e0 <set_reinicios>:
-}
-
-void set_reinicios(){
-	*(uint8_t *)(5347) = 0;
-  e0:	10 92 e3 14 	sts	0x14E3, r1	; 0x8014e3 <__RODATA_PM_OFFSET__+0x7f94e3>
-	CPU_CCP = CCP_SPM_gc;
-  e4:	8d e9       	ldi	r24, 0x9D	; 157
-  e6:	84 bf       	out	0x34, r24	; 52
-	NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
-  e8:	83 e0       	ldi	r24, 0x03	; 3
-  ea:	80 93 00 10 	sts	0x1000, r24	; 0x801000 <__RODATA_PM_OFFSET__+0x7f9000>
-  ee:	08 95       	ret
-
-000000f0 <calibrate_sensor>:
-* @param b Dato del tipo flotante que corresponde al parametro en la ecuacion ax+b
-*
-* @param port Dato del tipo entero que indica la posicion del sensor a calibrar
-*/
-
-void calibrate_sensor(float a, float b, int port){
-  f0:	0f 93       	push	r16
-  f2:	1f 93       	push	r17
-  f4:	cf 93       	push	r28
-  f6:	df 93       	push	r29
-  f8:	cd b7       	in	r28, 0x3d	; 61
-  fa:	de b7       	in	r29, 0x3e	; 62
-  fc:	2c 97       	sbiw	r28, 0x0c	; 12
-  fe:	cd bf       	out	0x3d, r28	; 61
- 100:	de bf       	out	0x3e, r29	; 62
-	Flotante Z,A,B;
-	A.f = a;
- 102:	6d 83       	std	Y+5, r22	; 0x05
- 104:	7e 83       	std	Y+6, r23	; 0x06
- 106:	8f 83       	std	Y+7, r24	; 0x07
- 108:	98 87       	std	Y+8, r25	; 0x08
-	B.f = b;
- 10a:	29 87       	std	Y+9, r18	; 0x09
- 10c:	3a 87       	std	Y+10, r19	; 0x0a
- 10e:	4b 87       	std	Y+11, r20	; 0x0b
- 110:	5c 87       	std	Y+12, r21	; 0x0c
-	Z.f	= A.f/B.f; 
- 112:	0e 94 20 01 	call	0x240	; 0x240 <__divsf3>
- 116:	69 83       	std	Y+1, r22	; 0x01
- 118:	7a 83       	std	Y+2, r23	; 0x02
- 11a:	8b 83       	std	Y+3, r24	; 0x03
- 11c:	9c 83       	std	Y+4, r25	; 0x04
-	if(port == 2){
- 11e:	02 30       	cpi	r16, 0x02	; 2
- 120:	11 05       	cpc	r17, r1
- 122:	a1 f5       	brne	.+104    	; 0x18c <__EEPROM_REGION_LENGTH__+0x8c>
- 124:	2e c0       	rjmp	.+92     	; 0x182 <__EEPROM_REGION_LENGTH__+0x82>
-		for(int i=0; i<=3; i++){
-
-			*(uint8_t *)(i+5352) = Z.dato[i];
- 126:	dc 01       	movw	r26, r24
- 128:	a8 51       	subi	r26, 0x18	; 24
- 12a:	bb 4e       	sbci	r27, 0xEB	; 235
- 12c:	e1 e0       	ldi	r30, 0x01	; 1
- 12e:	f0 e0       	ldi	r31, 0x00	; 0
- 130:	ec 0f       	add	r30, r28
- 132:	fd 1f       	adc	r31, r29
- 134:	e8 0f       	add	r30, r24
- 136:	f9 1f       	adc	r31, r25
- 138:	20 81       	ld	r18, Z
- 13a:	2c 93       	st	X, r18
-			CPU_CCP = CCP_SPM_gc;
- 13c:	3d e9       	ldi	r19, 0x9D	; 157
- 13e:	34 bf       	out	0x34, r19	; 52
-
-			NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
- 140:	e0 e0       	ldi	r30, 0x00	; 0
- 142:	f0 e1       	ldi	r31, 0x10	; 16
- 144:	23 e0       	ldi	r18, 0x03	; 3
- 146:	20 83       	st	Z, r18
-
-			*(uint8_t *)(i+5356) = A.dato[i];
- 148:	ac 01       	movw	r20, r24
- 14a:	44 51       	subi	r20, 0x14	; 20
- 14c:	5b 4e       	sbci	r21, 0xEB	; 235
- 14e:	a5 e0       	ldi	r26, 0x05	; 5
- 150:	b0 e0       	ldi	r27, 0x00	; 0
- 152:	ac 0f       	add	r26, r28
- 154:	bd 1f       	adc	r27, r29
- 156:	a8 0f       	add	r26, r24
- 158:	b9 1f       	adc	r27, r25
- 15a:	6c 91       	ld	r22, X
- 15c:	da 01       	movw	r26, r20
- 15e:	6c 93       	st	X, r22
-			CPU_CCP = CCP_SPM_gc;
- 160:	34 bf       	out	0x34, r19	; 52
-
-			NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
- 162:	20 83       	st	Z, r18
-			*(uint8_t *)(i+5360) = B.dato[i];
- 164:	4c 5f       	subi	r20, 0xFC	; 252
- 166:	5f 4f       	sbci	r21, 0xFF	; 255
- 168:	a9 e0       	ldi	r26, 0x09	; 9
- 16a:	b0 e0       	ldi	r27, 0x00	; 0
- 16c:	ac 0f       	add	r26, r28
- 16e:	bd 1f       	adc	r27, r29
- 170:	a8 0f       	add	r26, r24
- 172:	b9 1f       	adc	r27, r25
- 174:	6c 91       	ld	r22, X
- 176:	da 01       	movw	r26, r20
- 178:	6c 93       	st	X, r22
-			CPU_CCP = CCP_SPM_gc;
- 17a:	34 bf       	out	0x34, r19	; 52
-
-			NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
- 17c:	20 83       	st	Z, r18
-	Flotante Z,A,B;
-	A.f = a;
-	B.f = b;
-	Z.f	= A.f/B.f; 
-	if(port == 2){
-		for(int i=0; i<=3; i++){
- 17e:	01 96       	adiw	r24, 0x01	; 1
- 180:	02 c0       	rjmp	.+4      	; 0x186 <__EEPROM_REGION_LENGTH__+0x86>
- 182:	80 e0       	ldi	r24, 0x00	; 0
- 184:	90 e0       	ldi	r25, 0x00	; 0
- 186:	84 30       	cpi	r24, 0x04	; 4
- 188:	91 05       	cpc	r25, r1
- 18a:	6c f2       	brlt	.-102    	; 0x126 <__EEPROM_REGION_LENGTH__+0x26>
-
-			NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
-
-		}
-	}
-	if(port == 1){
- 18c:	01 30       	cpi	r16, 0x01	; 1
- 18e:	11 05       	cpc	r17, r1
- 190:	a1 f5       	brne	.+104    	; 0x1fa <__EEPROM_REGION_LENGTH__+0xfa>
- 192:	2e c0       	rjmp	.+92     	; 0x1f0 <__EEPROM_REGION_LENGTH__+0xf0>
-		for(int i=0; i<=3; i++){
-			*(uint8_t *)(i+5364) = Z.dato[i];
- 194:	dc 01       	movw	r26, r24
- 196:	ac 50       	subi	r26, 0x0C	; 12
- 198:	bb 4e       	sbci	r27, 0xEB	; 235
- 19a:	e1 e0       	ldi	r30, 0x01	; 1
- 19c:	f0 e0       	ldi	r31, 0x00	; 0
- 19e:	ec 0f       	add	r30, r28
- 1a0:	fd 1f       	adc	r31, r29
- 1a2:	e8 0f       	add	r30, r24
- 1a4:	f9 1f       	adc	r31, r25
- 1a6:	20 81       	ld	r18, Z
- 1a8:	2c 93       	st	X, r18
-			CPU_CCP = CCP_SPM_gc;
- 1aa:	3d e9       	ldi	r19, 0x9D	; 157
- 1ac:	34 bf       	out	0x34, r19	; 52
-			NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
- 1ae:	e0 e0       	ldi	r30, 0x00	; 0
- 1b0:	f0 e1       	ldi	r31, 0x10	; 16
- 1b2:	23 e0       	ldi	r18, 0x03	; 3
- 1b4:	20 83       	st	Z, r18
-			
-			*(uint8_t *)(i+5368) = A.dato[i];
- 1b6:	ac 01       	movw	r20, r24
- 1b8:	48 50       	subi	r20, 0x08	; 8
- 1ba:	5b 4e       	sbci	r21, 0xEB	; 235
- 1bc:	a5 e0       	ldi	r26, 0x05	; 5
- 1be:	b0 e0       	ldi	r27, 0x00	; 0
- 1c0:	ac 0f       	add	r26, r28
- 1c2:	bd 1f       	adc	r27, r29
- 1c4:	a8 0f       	add	r26, r24
- 1c6:	b9 1f       	adc	r27, r25
- 1c8:	6c 91       	ld	r22, X
- 1ca:	da 01       	movw	r26, r20
- 1cc:	6c 93       	st	X, r22
-			CPU_CCP = CCP_SPM_gc;
- 1ce:	34 bf       	out	0x34, r19	; 52
-			NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
- 1d0:	20 83       	st	Z, r18
-			
-			*(uint8_t *)(i+5372) = B.dato[i];
- 1d2:	4c 5f       	subi	r20, 0xFC	; 252
- 1d4:	5f 4f       	sbci	r21, 0xFF	; 255
- 1d6:	a9 e0       	ldi	r26, 0x09	; 9
- 1d8:	b0 e0       	ldi	r27, 0x00	; 0
- 1da:	ac 0f       	add	r26, r28
- 1dc:	bd 1f       	adc	r27, r29
- 1de:	a8 0f       	add	r26, r24
- 1e0:	b9 1f       	adc	r27, r25
- 1e2:	6c 91       	ld	r22, X
- 1e4:	da 01       	movw	r26, r20
- 1e6:	6c 93       	st	X, r22
-			CPU_CCP = CCP_SPM_gc;
- 1e8:	34 bf       	out	0x34, r19	; 52
-			NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
- 1ea:	20 83       	st	Z, r18
-			NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
-
-		}
-	}
-	if(port == 1){
-		for(int i=0; i<=3; i++){
- 1ec:	01 96       	adiw	r24, 0x01	; 1
- 1ee:	02 c0       	rjmp	.+4      	; 0x1f4 <__EEPROM_REGION_LENGTH__+0xf4>
- 1f0:	80 e0       	ldi	r24, 0x00	; 0
- 1f2:	90 e0       	ldi	r25, 0x00	; 0
- 1f4:	84 30       	cpi	r24, 0x04	; 4
- 1f6:	91 05       	cpc	r25, r1
- 1f8:	6c f2       	brlt	.-102    	; 0x194 <__EEPROM_REGION_LENGTH__+0x94>
-			CPU_CCP = CCP_SPM_gc;
-			NVMCTRL.CTRLA = NVMCTRL_CMD_PAGEERASEWRITE_gc;
-			
-		}
-	}
-}
- 1fa:	2c 96       	adiw	r28, 0x0c	; 12
- 1fc:	cd bf       	out	0x3d, r28	; 61
- 1fe:	de bf       	out	0x3e, r29	; 62
- 200:	df 91       	pop	r29
- 202:	cf 91       	pop	r28
- 204:	1f 91       	pop	r17
- 206:	0f 91       	pop	r16
- 208:	08 95       	ret
-
-0000020a <main>:
+000000e0 <main>:
  * @brief Funcion principal para el manejo de registros
  *
  */
 int main()
 {
 	CLOCK32K_init();
- 20a:	0e 94 48 00 	call	0x90	; 0x90 <CLOCK32K_init>
+  e0:	0e 94 48 00 	call	0x90	; 0x90 <CLOCK32K_init>
 	erase_EEPROM();
- 20e:	0e 94 51 00 	call	0xa2	; 0xa2 <erase_EEPROM>
-	config_Sensors('N','A',0);
- 212:	40 e0       	ldi	r20, 0x00	; 0
- 214:	50 e0       	ldi	r21, 0x00	; 0
- 216:	61 e4       	ldi	r22, 0x41	; 65
- 218:	70 e0       	ldi	r23, 0x00	; 0
- 21a:	8e e4       	ldi	r24, 0x4E	; 78
- 21c:	90 e0       	ldi	r25, 0x00	; 0
- 21e:	0e 94 5f 00 	call	0xbe	; 0xbe <config_Sensors>
-	calibrate_sensor(15.625,7.5,1);
- 222:	01 e0       	ldi	r16, 0x01	; 1
- 224:	10 e0       	ldi	r17, 0x00	; 0
- 226:	20 e0       	ldi	r18, 0x00	; 0
- 228:	30 e0       	ldi	r19, 0x00	; 0
- 22a:	40 ef       	ldi	r20, 0xF0	; 240
- 22c:	50 e4       	ldi	r21, 0x40	; 64
- 22e:	60 e0       	ldi	r22, 0x00	; 0
- 230:	70 e0       	ldi	r23, 0x00	; 0
- 232:	8a e7       	ldi	r24, 0x7A	; 122
- 234:	91 e4       	ldi	r25, 0x41	; 65
- 236:	0e 94 78 00 	call	0xf0	; 0xf0 <calibrate_sensor>
-	set_reinicios();
- 23a:	0e 94 70 00 	call	0xe0	; 0xe0 <set_reinicios>
- 23e:	ff cf       	rjmp	.-2      	; 0x23e <main+0x34>
+  e4:	0e 94 51 00 	call	0xa2	; 0xa2 <erase_EEPROM>
+	config_Sensors('i','A',0);
+  e8:	40 e0       	ldi	r20, 0x00	; 0
+  ea:	50 e0       	ldi	r21, 0x00	; 0
+  ec:	61 e4       	ldi	r22, 0x41	; 65
+  ee:	70 e0       	ldi	r23, 0x00	; 0
+  f0:	89 e6       	ldi	r24, 0x69	; 105
+  f2:	90 e0       	ldi	r25, 0x00	; 0
+  f4:	0e 94 5f 00 	call	0xbe	; 0xbe <config_Sensors>
+  f8:	ff cf       	rjmp	.-2      	; 0xf8 <main+0x18>
 
-00000240 <__divsf3>:
- 240:	0e 94 34 01 	call	0x268	; 0x268 <__divsf3x>
- 244:	0c 94 a9 01 	jmp	0x352	; 0x352 <__fp_round>
- 248:	0e 94 a2 01 	call	0x344	; 0x344 <__fp_pscB>
- 24c:	58 f0       	brcs	.+22     	; 0x264 <__divsf3+0x24>
- 24e:	0e 94 9b 01 	call	0x336	; 0x336 <__fp_pscA>
- 252:	40 f0       	brcs	.+16     	; 0x264 <__divsf3+0x24>
- 254:	29 f4       	brne	.+10     	; 0x260 <__divsf3+0x20>
- 256:	5f 3f       	cpi	r21, 0xFF	; 255
- 258:	29 f0       	breq	.+10     	; 0x264 <__divsf3+0x24>
- 25a:	0c 94 92 01 	jmp	0x324	; 0x324 <__fp_inf>
- 25e:	51 11       	cpse	r21, r1
- 260:	0c 94 dd 01 	jmp	0x3ba	; 0x3ba <__fp_szero>
- 264:	0c 94 98 01 	jmp	0x330	; 0x330 <__fp_nan>
+000000fa <_exit>:
+  fa:	f8 94       	cli
 
-00000268 <__divsf3x>:
- 268:	0e 94 ba 01 	call	0x374	; 0x374 <__fp_split3>
- 26c:	68 f3       	brcs	.-38     	; 0x248 <__divsf3+0x8>
-
-0000026e <__divsf3_pse>:
- 26e:	99 23       	and	r25, r25
- 270:	b1 f3       	breq	.-20     	; 0x25e <__divsf3+0x1e>
- 272:	55 23       	and	r21, r21
- 274:	91 f3       	breq	.-28     	; 0x25a <__divsf3+0x1a>
- 276:	95 1b       	sub	r25, r21
- 278:	55 0b       	sbc	r21, r21
- 27a:	bb 27       	eor	r27, r27
- 27c:	aa 27       	eor	r26, r26
- 27e:	62 17       	cp	r22, r18
- 280:	73 07       	cpc	r23, r19
- 282:	84 07       	cpc	r24, r20
- 284:	38 f0       	brcs	.+14     	; 0x294 <__divsf3_pse+0x26>
- 286:	9f 5f       	subi	r25, 0xFF	; 255
- 288:	5f 4f       	sbci	r21, 0xFF	; 255
- 28a:	22 0f       	add	r18, r18
- 28c:	33 1f       	adc	r19, r19
- 28e:	44 1f       	adc	r20, r20
- 290:	aa 1f       	adc	r26, r26
- 292:	a9 f3       	breq	.-22     	; 0x27e <__divsf3_pse+0x10>
- 294:	35 d0       	rcall	.+106    	; 0x300 <__divsf3_pse+0x92>
- 296:	0e 2e       	mov	r0, r30
- 298:	3a f0       	brmi	.+14     	; 0x2a8 <__divsf3_pse+0x3a>
- 29a:	e0 e8       	ldi	r30, 0x80	; 128
- 29c:	32 d0       	rcall	.+100    	; 0x302 <__divsf3_pse+0x94>
- 29e:	91 50       	subi	r25, 0x01	; 1
- 2a0:	50 40       	sbci	r21, 0x00	; 0
- 2a2:	e6 95       	lsr	r30
- 2a4:	00 1c       	adc	r0, r0
- 2a6:	ca f7       	brpl	.-14     	; 0x29a <__divsf3_pse+0x2c>
- 2a8:	2b d0       	rcall	.+86     	; 0x300 <__divsf3_pse+0x92>
- 2aa:	fe 2f       	mov	r31, r30
- 2ac:	29 d0       	rcall	.+82     	; 0x300 <__divsf3_pse+0x92>
- 2ae:	66 0f       	add	r22, r22
- 2b0:	77 1f       	adc	r23, r23
- 2b2:	88 1f       	adc	r24, r24
- 2b4:	bb 1f       	adc	r27, r27
- 2b6:	26 17       	cp	r18, r22
- 2b8:	37 07       	cpc	r19, r23
- 2ba:	48 07       	cpc	r20, r24
- 2bc:	ab 07       	cpc	r26, r27
- 2be:	b0 e8       	ldi	r27, 0x80	; 128
- 2c0:	09 f0       	breq	.+2      	; 0x2c4 <__divsf3_pse+0x56>
- 2c2:	bb 0b       	sbc	r27, r27
- 2c4:	80 2d       	mov	r24, r0
- 2c6:	bf 01       	movw	r22, r30
- 2c8:	ff 27       	eor	r31, r31
- 2ca:	93 58       	subi	r25, 0x83	; 131
- 2cc:	5f 4f       	sbci	r21, 0xFF	; 255
- 2ce:	3a f0       	brmi	.+14     	; 0x2de <__divsf3_pse+0x70>
- 2d0:	9e 3f       	cpi	r25, 0xFE	; 254
- 2d2:	51 05       	cpc	r21, r1
- 2d4:	78 f0       	brcs	.+30     	; 0x2f4 <__divsf3_pse+0x86>
- 2d6:	0c 94 92 01 	jmp	0x324	; 0x324 <__fp_inf>
- 2da:	0c 94 dd 01 	jmp	0x3ba	; 0x3ba <__fp_szero>
- 2de:	5f 3f       	cpi	r21, 0xFF	; 255
- 2e0:	e4 f3       	brlt	.-8      	; 0x2da <__divsf3_pse+0x6c>
- 2e2:	98 3e       	cpi	r25, 0xE8	; 232
- 2e4:	d4 f3       	brlt	.-12     	; 0x2da <__divsf3_pse+0x6c>
- 2e6:	86 95       	lsr	r24
- 2e8:	77 95       	ror	r23
- 2ea:	67 95       	ror	r22
- 2ec:	b7 95       	ror	r27
- 2ee:	f7 95       	ror	r31
- 2f0:	9f 5f       	subi	r25, 0xFF	; 255
- 2f2:	c9 f7       	brne	.-14     	; 0x2e6 <__divsf3_pse+0x78>
- 2f4:	88 0f       	add	r24, r24
- 2f6:	91 1d       	adc	r25, r1
- 2f8:	96 95       	lsr	r25
- 2fa:	87 95       	ror	r24
- 2fc:	97 f9       	bld	r25, 7
- 2fe:	08 95       	ret
- 300:	e1 e0       	ldi	r30, 0x01	; 1
- 302:	66 0f       	add	r22, r22
- 304:	77 1f       	adc	r23, r23
- 306:	88 1f       	adc	r24, r24
- 308:	bb 1f       	adc	r27, r27
- 30a:	62 17       	cp	r22, r18
- 30c:	73 07       	cpc	r23, r19
- 30e:	84 07       	cpc	r24, r20
- 310:	ba 07       	cpc	r27, r26
- 312:	20 f0       	brcs	.+8      	; 0x31c <__divsf3_pse+0xae>
- 314:	62 1b       	sub	r22, r18
- 316:	73 0b       	sbc	r23, r19
- 318:	84 0b       	sbc	r24, r20
- 31a:	ba 0b       	sbc	r27, r26
- 31c:	ee 1f       	adc	r30, r30
- 31e:	88 f7       	brcc	.-30     	; 0x302 <__divsf3_pse+0x94>
- 320:	e0 95       	com	r30
- 322:	08 95       	ret
-
-00000324 <__fp_inf>:
- 324:	97 f9       	bld	r25, 7
- 326:	9f 67       	ori	r25, 0x7F	; 127
- 328:	80 e8       	ldi	r24, 0x80	; 128
- 32a:	70 e0       	ldi	r23, 0x00	; 0
- 32c:	60 e0       	ldi	r22, 0x00	; 0
- 32e:	08 95       	ret
-
-00000330 <__fp_nan>:
- 330:	9f ef       	ldi	r25, 0xFF	; 255
- 332:	80 ec       	ldi	r24, 0xC0	; 192
- 334:	08 95       	ret
-
-00000336 <__fp_pscA>:
- 336:	00 24       	eor	r0, r0
- 338:	0a 94       	dec	r0
- 33a:	16 16       	cp	r1, r22
- 33c:	17 06       	cpc	r1, r23
- 33e:	18 06       	cpc	r1, r24
- 340:	09 06       	cpc	r0, r25
- 342:	08 95       	ret
-
-00000344 <__fp_pscB>:
- 344:	00 24       	eor	r0, r0
- 346:	0a 94       	dec	r0
- 348:	12 16       	cp	r1, r18
- 34a:	13 06       	cpc	r1, r19
- 34c:	14 06       	cpc	r1, r20
- 34e:	05 06       	cpc	r0, r21
- 350:	08 95       	ret
-
-00000352 <__fp_round>:
- 352:	09 2e       	mov	r0, r25
- 354:	03 94       	inc	r0
- 356:	00 0c       	add	r0, r0
- 358:	11 f4       	brne	.+4      	; 0x35e <__fp_round+0xc>
- 35a:	88 23       	and	r24, r24
- 35c:	52 f0       	brmi	.+20     	; 0x372 <__fp_round+0x20>
- 35e:	bb 0f       	add	r27, r27
- 360:	40 f4       	brcc	.+16     	; 0x372 <__fp_round+0x20>
- 362:	bf 2b       	or	r27, r31
- 364:	11 f4       	brne	.+4      	; 0x36a <__fp_round+0x18>
- 366:	60 ff       	sbrs	r22, 0
- 368:	04 c0       	rjmp	.+8      	; 0x372 <__fp_round+0x20>
- 36a:	6f 5f       	subi	r22, 0xFF	; 255
- 36c:	7f 4f       	sbci	r23, 0xFF	; 255
- 36e:	8f 4f       	sbci	r24, 0xFF	; 255
- 370:	9f 4f       	sbci	r25, 0xFF	; 255
- 372:	08 95       	ret
-
-00000374 <__fp_split3>:
- 374:	57 fd       	sbrc	r21, 7
- 376:	90 58       	subi	r25, 0x80	; 128
- 378:	44 0f       	add	r20, r20
- 37a:	55 1f       	adc	r21, r21
- 37c:	59 f0       	breq	.+22     	; 0x394 <__fp_splitA+0x10>
- 37e:	5f 3f       	cpi	r21, 0xFF	; 255
- 380:	71 f0       	breq	.+28     	; 0x39e <__fp_splitA+0x1a>
- 382:	47 95       	ror	r20
-
-00000384 <__fp_splitA>:
- 384:	88 0f       	add	r24, r24
- 386:	97 fb       	bst	r25, 7
- 388:	99 1f       	adc	r25, r25
- 38a:	61 f0       	breq	.+24     	; 0x3a4 <__fp_splitA+0x20>
- 38c:	9f 3f       	cpi	r25, 0xFF	; 255
- 38e:	79 f0       	breq	.+30     	; 0x3ae <__fp_splitA+0x2a>
- 390:	87 95       	ror	r24
- 392:	08 95       	ret
- 394:	12 16       	cp	r1, r18
- 396:	13 06       	cpc	r1, r19
- 398:	14 06       	cpc	r1, r20
- 39a:	55 1f       	adc	r21, r21
- 39c:	f2 cf       	rjmp	.-28     	; 0x382 <__fp_split3+0xe>
- 39e:	46 95       	lsr	r20
- 3a0:	f1 df       	rcall	.-30     	; 0x384 <__fp_splitA>
- 3a2:	08 c0       	rjmp	.+16     	; 0x3b4 <__fp_splitA+0x30>
- 3a4:	16 16       	cp	r1, r22
- 3a6:	17 06       	cpc	r1, r23
- 3a8:	18 06       	cpc	r1, r24
- 3aa:	99 1f       	adc	r25, r25
- 3ac:	f1 cf       	rjmp	.-30     	; 0x390 <__fp_splitA+0xc>
- 3ae:	86 95       	lsr	r24
- 3b0:	71 05       	cpc	r23, r1
- 3b2:	61 05       	cpc	r22, r1
- 3b4:	08 94       	sec
- 3b6:	08 95       	ret
-
-000003b8 <__fp_zero>:
- 3b8:	e8 94       	clt
-
-000003ba <__fp_szero>:
- 3ba:	bb 27       	eor	r27, r27
- 3bc:	66 27       	eor	r22, r22
- 3be:	77 27       	eor	r23, r23
- 3c0:	cb 01       	movw	r24, r22
- 3c2:	97 f9       	bld	r25, 7
- 3c4:	08 95       	ret
-
-000003c6 <_exit>:
- 3c6:	f8 94       	cli
-
-000003c8 <__stop_program>:
- 3c8:	ff cf       	rjmp	.-2      	; 0x3c8 <__stop_program>
+000000fc <__stop_program>:
+  fc:	ff cf       	rjmp	.-2      	; 0xfc <__stop_program>
